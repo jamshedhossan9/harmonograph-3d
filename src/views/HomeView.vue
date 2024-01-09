@@ -5,13 +5,15 @@
     </main>
     <div class="setting">
         <div class="active-tools">
-            <div class="flex gap-2 align-items-center">
+            <div class="flex gap-2 align-items-center flex-wrap">
                 <Button class="p-button-xs" v-if="drawing" size="small" severity="warning" label="Pause" @click="stop()"></Button>
                 <Button class="p-button-xs" v-else size="small" label="Draw" @click="start(); sidebarShow = false;"></Button>
-                <Button class="p-button-xs" size="small" :label="isMachineVisible ? 'Hide Machine' : 'Show Machine'" :severity="isMachineVisible ? 'help' : 'info'" @click="machineVisibility"></Button>
-                <Button class="p-button-xs" v-if="isDrawn && cameraControlsDirty && (!isMachineVisible || (isMachineVisible && !drawing))" size="small" label="Reset Position" severity="secondary" @click="resetPosition"></Button>
+                <Button class="p-button-xs" v-if="isMachineVisible" size="small" label="Hide Machine" severity="help" @click="machineVisibility"></Button>
+                <SplitButton v-else class="p-splitbutton-xs" severity="info" label="Show Machine" @click="machineVisibility" :model="machineVisibilityOptions" />
+                <!-- <Button class="p-button-xs" v-if="isDrawn && cameraControlsDirty && (!isMachineVisible || (isMachineVisible && !drawing))" size="small" label="Reset Position" severity="secondary" @click="resetPosition"></Button> -->
+                <SplitButton v-if="isDrawn && cameraControlsDirty && (!isMachineVisible || (isMachineVisible && !drawing))" class="p-splitbutton-xs" severity="secondary" label="Reset Position" @click="resetPosition" :model="resetPositionOptions" />
                 <Info></Info>
-                <Button class="p-button-xs" :icon="sidebarShow ? 'pi pi-angle-right' : 'pi pi-wrench'" outlined size="small" rounded severity="secondary" @click="stop(); sidebarShow = true" v-tooltip.left="'Settings'"></Button>
+                <Button class="p-button-xs" :icon="sidebarShow ? 'pi pi-angle-right' : 'pi pi-wrench'"  size="small" rounded severity="secondary" @click="stop(); sidebarShow = true" v-tooltip.left="'Settings'"></Button>
             </div>
         </div>
     </div>
@@ -83,11 +85,11 @@ import type { SettingGearType, BoardType, CanvasType, HandType, ColorType } from
 import helper from '@/helpers/helper';
 import MyWorker from '@/helpers/worker?worker';
 import * as THREE from 'three';
-import WebGL from 'three/addons/capabilities/WebGL.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// import WebGL from 'three/addons/capabilities/WebGL.js';
+// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import CameraControls from 'camera-controls';
 import { onKeyStroke } from '@vueuse/core';
-import { STLExporter } from 'three/addons/exporters/STLExporter.js';
+// import { STLExporter } from 'three/addons/exporters/STLExporter.js';
 import { GifWriter } from 'omggif';
 import SplitButton from 'primevue/splitbutton';
 import Accordion from 'primevue/accordion';
@@ -534,7 +536,7 @@ const setScene = () => {
     // camera = new THREE.PerspectiveCamera( fov, board.value.size.width / board.value.size.height, 1, 30000 );
     // camera.position.set( 100, 100, perspective );
     
-    camera = new THREE.OrthographicCamera( board.value.size.width / - 2, board.value.size.width / 2, board.value.size.height / 2, board.value.size.height / - 2, 2, 30000 );
+    camera = new THREE.OrthographicCamera( board.value.size.width / - 2, board.value.size.width / 2, board.value.size.height / 2, board.value.size.height / - 2, 1, 30000 );
     camera.position.set( 0, 0, perspective );
     // document.body.style.perspective = `${perspective}px`;
 
@@ -600,7 +602,7 @@ const setScene = () => {
     // cameraControls = new OrbitControls( camera, renderer.domElement );
     // cameraControls.enableDamping = true;
     cameraControls = new CameraControls( camera, renderer.domElement );
-    cameraControls.dollyToCursor = true;
+    // cameraControls.dollyToCursor = true;
     // cameraControls.infinityDolly = true;
     cameraControls.maxDistance = 30000;
     // cameraControls.enableDamping = true;
@@ -610,7 +612,18 @@ const setScene = () => {
 
     cameraControls.addEventListener( 'control', function ( event ) {
         cameraControlsDirty.value = true;
+        
     });
+    cameraControls.addEventListener( 'controlstart', () => {
+
+        controlingManually.value = true;
+
+    } );
+    cameraControls.addEventListener( 'controlend', () => {
+
+        controlingManually.value = false;
+
+    } );
     cameraControls.addEventListener( 'rest', function ( event ) {
         if(cameraControlsDirty.value){
             setControlCenterOfObject();
@@ -624,8 +637,8 @@ const setScene = () => {
     threedPosHolder = { ...threedPosHolderDefault };
     threedPosHolder.firstDraw = true;
 
-    window.line = line
-    window.cameraControls = cameraControls
+    // window.line = line
+    // window.cameraControls = cameraControls
 }
 
 const resetScene = () => {
@@ -660,7 +673,7 @@ const setControlCenterOfObject = () => {
     // cameraControls.target = new THREE.Vector3(x, y, z);
 
     cameraControls.setOrbitPoint(x,y,z)
-    // console.log(cameraControls.toJSON())
+    console.log(cameraControls.toJSON())
 
 }
 
@@ -896,7 +909,8 @@ const objectPosChange = () => {
     
 }
 
-
+const enableAutoRotate = ref(true);
+const controlingManually = ref(false);
 const render = () => {
     // requestAnimationFrame( render );
 
@@ -907,10 +921,16 @@ const render = () => {
     // colorAttribute.needsUpdate = true;
     // positionAttribute.needsUpdate = true;
 
-    autoRotate();
+    autoRotateForGif();
     
     const delta = clock.getDelta();
     const hasControlsUpdated = cameraControls.update( delta );
+
+    if ( enableAutoRotate.value && !controlingManually.value && !isMachineVisible.value) {
+        setControlCenterOfObject();
+        cameraControls.azimuthAngle += 10 * delta * THREE.MathUtils.DEG2RAD;
+        cameraControlsDirty.value = true;
+    }
 
     requestAnimationFrame( render );
     renderer.render( scene, camera );
@@ -988,12 +1008,7 @@ const _save = ( blob: any, filename: any ) => {
 
 }
 
-const enableAutoRotate = ref(false);
-const autoRotationDegree = Math.PI/90;
-var autoRotationDegreeCurrent = 0;
-var autoRotationStep = 0;
-var autoRotationPolarAngleDir = -1;
-
+const generatingGif = ref(false);
 var gifDefault: any = {
     canvas: null,
     context: null,
@@ -1003,32 +1018,27 @@ var gifDefault: any = {
     buffer: null,
     pixels: null,
     writer: null,
-    current: 0,
+    degPerStep: Math.PI/90,
+    currentSetp: 0,
+    currentDeg: 0,
     generatedBuffer: null,
 }
 var gif = {...gifDefault};
 
-const autoRotate = () => {
+const autoRotateForGif = () => {
     
-	if ( enableAutoRotate.value ) {
+	if ( generatingGif.value ) {
         const delta = clock.getDelta();
         const elapsed = clock.getElapsedTime();
         const updated = cameraControls.update( delta );
 
-        autoRotationStep++;
-        autoRotationDegreeCurrent = autoRotationDegree * autoRotationStep;
+        gif.currentSetp++;
+        gif.currentDeg = gif.degPerStep * gif.currentSetp;
         // line.rotation.x = autoRotationDegreeCurrent;
         // line.rotation.y = autoRotationDegreeCurrent;
         // line.rotation.y = 0;
 		// cameraControls.azimuthAngle = autoRotationDegreeCurrent;
-		cameraControls.azimuthAngle += autoRotationDegree;
-        if(autoRotationStep == 0 || autoRotationStep == 45 * 3){
-            autoRotationPolarAngleDir = -1;
-        }
-        else if(autoRotationStep == 45){
-            autoRotationPolarAngleDir = 1;
-        }
-		cameraControls.polarAngle += autoRotationDegree * autoRotationPolarAngleDir;
+		cameraControls.azimuthAngle += gif.degPerStep;
 		// cameraControls.polarAngle = autoRotationDegreeCurrent;
 		// cameraControls.azimuthAngle += 90 * delta * THREE.MathUtils.DEG2RAD;
 		// cameraControls.polarAngle += 20 * delta * THREE.MathUtils.DEG2RAD;
@@ -1036,39 +1046,29 @@ const autoRotate = () => {
         // console.log(cameraControls.azimuthAngle, cameraControls.polarAngle, autoRotationDegreeCurrent, Math.PI * 2)
         // renderer.render( scene, camera );
         generateGIF();
-        if(autoRotationStep >= 180){
-            enableAutoRotate.value = false;
+        if(gif.currentSetp >= gif.frames){
+            generatingGif.value = false;
             cameraControls.azimuthAngle = 0;
             cameraControls.polarAngle = Math.PI/2;
-            line.rotation.x = 0;
-            line.rotation.y = 0;
             gif.generatedBuffer = gif.buffer.subarray( 0, gif.writer.end() )
             exportGif();
         }
         // console.log(cameraControls.azimuthAngle, cameraControls.polarAngle)
         // setTimeout(autoRotate, 0)
-        // autoRotate()
+        // autoRotateForGif()
 	}
 }
 
-const triggerAutoRotate = () => {
-    if(!enableAutoRotate.value){
-        
-
-        autoRotationDegreeCurrent = 0;
-        autoRotationStep = 0;
+const triggerAutoRotateForGif = () => {
+    if(!generatingGif.value){
+        controlingManually.value = true;
         cameraControls.rotateTo(0, Math.PI/2, true).then(function(){
             cameraControls.azimuthAngle = 0;
             cameraControls.polarAngle = Math.PI/2;
-            line.rotation.x = 0;
-            line.rotation.y = 0;
             // console.log(cameraControls.azimuthAngle, cameraControls.polarAngle)
-            enableAutoRotate.value = true;
-            autoRotate();
+            generatingGif.value = true;
+            autoRotateForGif();
         })
-    }
-    else{
-        enableAutoRotate.value = false;
     }
 }
 
@@ -1078,9 +1078,11 @@ const exportGif = () => {
     canvasimgRef.value.href = URL.createObjectURL( blob );
     canvasimgRef.value.download = 'pintograph.gif';
     canvasimgRef.value.click();
+    controlingManually.value = false;
 }
 
 const saveGif = () => {
+    
     gif = {...gifDefault};
     gif.canvas = document.createElement( 'canvas' );
     gif.canvas.width = canvas.value.size.width;
@@ -1092,7 +1094,7 @@ const saveGif = () => {
     gif.writer = new GifWriter( gif.buffer, gif.canvas.width, gif.canvas.height, { loop: 0 } );
     
     gif.current = 0;
-    triggerAutoRotate();
+    triggerAutoRotateForGif();
 }
 
 
@@ -1166,6 +1168,34 @@ const exportOptions = [
         }
     },
 ];
+const resetPositionOptions = [
+    {
+        label: 'Reset Zoom',
+        command: () => {
+            resetPositionZoom()
+        }
+    },
+    {
+        label: 'Reset Angle',
+        command: () => {
+            resetPositionAngle()
+        }
+    },
+    {
+        label: 'Move to Center',
+        command: () => {
+            resetPositionCenter()
+        }
+    },
+];
+const machineVisibilityOptions = [
+    {
+        label: () => enableAutoRotate.value ? 'Disable Auto Rotate' : 'Enable Auto Rotate',
+        command: () => {
+            enableAutoRotate.value = !enableAutoRotate.value;
+        }
+    },
+];
 
 const openExportOptions = (e: any) => {
     // console.log(e)
@@ -1221,7 +1251,7 @@ const start = () => {
             if(!isMachineVisible.value){
                 _start();
             }
-            else if(true || cameraControlsDirty.value){
+            else if(enableAutoRotate.value || cameraControlsDirty.value){
                 cameraControlsDirty.value = false;
                 cameraControls.reset(true)
                 // cameraControls.reset(true).then(()=>{
@@ -1232,6 +1262,8 @@ const start = () => {
                 // })
             }
             else{
+                cameraControls.reset();
+                cameraControls.moveTo(0,0, threedPosHolder.old.z);
                 _start();
             }
         }
@@ -1243,11 +1275,37 @@ const start = () => {
 }
 
 const resetPosition = () => {
+    controlingManually.value = true;
     cameraControlsDirty.value = false;
     cameraControls.reset(true).then(function(){
         setControlCenterOfObject();
+        controlingManually.value = false;
+    })    
+}
+
+const resetPositionAngle = () => {
+    controlingManually.value = true;
+    cameraControls.azimuthAngle = cameraControls.azimuthAngle % (Math.PI * 2);
+    cameraControls.rotateTo(0, Math.PI/2, true).then(function(){
+        setControlCenterOfObject();
+        controlingManually.value = false;
     })
-    
+}
+
+const resetPositionZoom = () => {
+    controlingManually.value = true;
+    cameraControls.zoomTo(1, true).then(function(){
+        setControlCenterOfObject();
+        controlingManually.value = false;
+    })
+}
+
+const resetPositionCenter = () => {
+    controlingManually.value = true;
+    cameraControls.setFocalOffset(0, 0, 0, true).then(function(){
+        setControlCenterOfObject();
+        controlingManually.value = false;
+    })
 }
 
 const machineVisibility = () => {

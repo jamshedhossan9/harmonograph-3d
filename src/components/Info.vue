@@ -1,5 +1,5 @@
 <template>
-    <Button  class="p-button-xs" icon="pi pi-info" rounded outlined severity="secondary" size="small" @click="visible = true" v-tooltip.top="'Info'"></Button>
+    <Button  class="p-button-xs" icon="pi pi-info" rounded severity="secondary" size="small" @click="visible = true" v-tooltip.top="'Info'"></Button>
     <Dialog v-model:visible="visible" modal header="Harmonographs" :dismissableMask="true" class="info-dialog" :style="{ width: 'calc(100% - 2rem)', maxWidth: '50rem' }">
         <p class="m-0 line-height-3">
             Harmonographs are simple but interesting devices that display some of the complex, mysterious, and beautiful patterns hidden in simple harmonic motion, such as pendulums and spinning wheels. This is a form of harmonograph that operates on the rotation of two wheels. 

@@ -24,7 +24,7 @@
                 <div class="machine_hand_palm_bridge_column_tip" ref="machine_hand_palm_bridge_column_tip">
                     <div class="pen_con">
                         <div class="machine_hand_pen" ref="machine_hand_pen"></div>
-                        <img class="pen hidden" src="./assets/icons/pencil.svg">
+                        <img class="pen hidden" :src="penIcon.href">
                     </div>
                 </div>
             </div>
@@ -72,6 +72,8 @@
         machine_hand_palm_bridge_column_tip,
         machine_hand_pen,
     })
+
+    const penIcon = ref(new URL(`../assets/icons/pencil.svg`, import.meta.url));
 
     onMounted(() => {
         console.log('Hand mounted')
