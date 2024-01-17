@@ -6,10 +6,10 @@
     <div class="setting">
         <div class="active-tools">
             <div class="flex gap-2 align-items-center flex-wrap">
-                <Button class="p-button-xs" v-if="drawing" size="small" severity="warning" label="Pause" @click="stop()"></Button>
-                <Button class="p-button-xs" v-else size="small" label="Draw" @click="start(); sidebarShow = false;"></Button>
-                <Button class="p-button-xs" v-if="isMachineVisible" size="small" label="Hide Machine" severity="help" @click="machineVisibility"></Button>
-                <SplitButton v-else class="p-splitbutton-xs" severity="info" label="Show Machine" @click="machineVisibility" :model="machineVisibilityOptions" />
+                <Button class="p-button-xs" v-if="drawing" size="small" severity="warning" label="Pause" @click="stop()"  :disabled="controlingManually"></Button>
+                <Button class="p-button-xs" v-else size="small" label="Draw" @click="start(); sidebarShow = false;"  :disabled="controlingManually"></Button>
+                <Button class="p-button-xs" v-if="isMachineVisible" size="small" label="Hide Machine" severity="help" @click="machineVisibility" :disabled="controlingManually"></Button>
+                <SplitButton v-else class="p-splitbutton-xs" severity="info" label="Show Machine" @click="machineVisibility" :model="machineVisibilityOptions" :disabled="controlingManually" />
                 <!-- <Button class="p-button-xs" v-if="isDrawn && cameraControlsDirty && (!isMachineVisible || (isMachineVisible && !drawing))" size="small" label="Reset Position" severity="secondary" @click="resetPosition"></Button> -->
                 <SplitButton v-if="isDrawn && cameraControlsDirty && (!isMachineVisible || (isMachineVisible && !drawing))" class="p-splitbutton-xs" severity="secondary" label="Reset Position" @click="resetPosition" :model="resetPositionOptions" />
                 <Info></Info>
@@ -33,6 +33,8 @@
                     <AccordionTab header="Others">
                         <SettingOther 
                             v-model="hand" 
+                            v-model:backgroundGradient="backgroundGradient"
+                            @update:backgroundGradient="updatedBackground"
                             v-model:accuracy="canvas.accuracy" 
                             v-model:depth="canvas.depth" 
                             v-model:depthDir="canvas.depthDir" 
@@ -81,7 +83,7 @@ import SettingOther from '@/components/SettingOther.vue';
 import Machine from '@/components/Machine.vue';
 import Presets from '@/components/Presets.vue';
 import Info from '@/components/Info.vue';
-import type { SettingGearType, BoardType, CanvasType, HandType, ColorType } from '@/types/Setting';
+import type { SettingGearType, BoardType, CanvasType, HandType, ColorType, BackgroundGradient } from '@/types/Setting';
 import helper from '@/helpers/helper';
 import MyWorker from '@/helpers/worker?worker';
 import * as THREE from 'three';
@@ -97,8 +99,8 @@ import AccordionTab from 'primevue/accordiontab';
 import { useScroll } from '@vueuse/core'
 
 const isMounted = ref(false);
-const sidebarShow = ref(false);
-const settingActiveIndex = ref([])
+const sidebarShow = ref(true);
+const settingActiveIndex = ref([0, 1, 2])
 const onSidebarShow = () => {
     settingScrollerY.value = settingScrollerCurrentX.value;
 }
@@ -121,8 +123,8 @@ const canvasRef = ref()
 const canvas = ref<CanvasType>({
     scale: 1,
     strokeWidth: 1,
-    accuracy: 2,
-    depth: 2,
+    accuracy: 1,
+    depth: 8,
     depthDir: 1,
     context: null,
     size: {
@@ -161,37 +163,37 @@ const color = ref<ColorType>({
 
 const leftGear = ref<SettingGearType>({
     side: 'left',
-    deg: 0,
-    wallDistance: 34,
+    deg: 206,
+    wallDistance: 21,
     parent: {
-        dir: -1,
-        speed: 30,
+        dir: 1,
+        speed: 239,
         deg: 0,
-        size: 14,
+        size: 27,
     },
     child: {
-        dir: 1,
+        dir: -1,
         speed: 2,
         deg: 0,
-        size: 35,
+        size: 60,
         conDeg: 0,
     },
 });
 const rightGear = ref<SettingGearType>({
     side: 'right',
-    deg: 0,
-    wallDistance: 34,
+    deg: 260,
+    wallDistance: 0,
     parent: {
         dir: -1,
-        speed: 30,
+        speed: 182,
         deg: 0,
-        size: 14,
+        size: 36,
     },
     child: {
         dir: 1,
-        speed: 2,
+        speed: 3,
         deg: 0,
-        size: 35,
+        size: 80,
         conDeg: 0,
     },
 });
@@ -227,6 +229,10 @@ const settingToCache = () => {
             start: color.value.start,
             end: color.value.end,
             opacity: color.value.opacity,
+        },
+        background:{
+            color1: backgroundGradient.value.color1,
+            color2: backgroundGradient.value.color2,
         },
         canvas:{
             accuracy: canvas.value.accuracy,
@@ -283,7 +289,7 @@ const settingToCache = () => {
     // console.log(localStorage)
 }
 
-const cacheToSetting = (setting?: any) => {
+const cacheToSetting = (setting?: any, isPreset: boolean = false) => {
     if(typeof setting === "undefined"){
         try{
             setting = JSON.parse(localStorage.getItem('harmonograph_3d_setting') ?? '');
@@ -293,7 +299,7 @@ const cacheToSetting = (setting?: any) => {
         }
     }
     if(setting){
-        // console.log(setting)
+        console.log(setting)
         if(typeof setting?.machine?.gear?.[0]?.deg !== "undefined"){
             gear[0].value.deg = setting.machine.gear[0].deg;
         }
@@ -388,7 +394,45 @@ const cacheToSetting = (setting?: any) => {
         else{
             color.value.opacity = .5;
         }
+
+        if(typeof setting?.background?.color1 !== "undefined"){
+            backgroundGradient.value.color1 = setting.background.color1;
+        }
+        else if(isPreset){
+            backgroundGradient.value.color1 = backgroundGradientDefault.color1;
+        }
+        if(typeof setting?.background?.color2 !== "undefined"){ 
+            backgroundGradient.value.color2 = setting.background.color2;
+        }
+        else if(isPreset){
+            backgroundGradient.value.color2 = backgroundGradientDefault.color2;
+        }
+        if(isPreset){
+            generateBackground();
+        }
     }
+}
+
+const cacheToSettingOthers = () => {
+    let setting: any = null;
+    try{
+        setting = JSON.parse(localStorage.getItem('harmonograph_3d_setting_others') ?? '');
+    }
+    catch(e){
+        setting = null;
+    }
+    if(setting){
+        if(typeof setting.enable_auto_rotate !== "undefined"){
+            enableAutoRotate.value = setting.enable_auto_rotate;
+        }
+    }
+}
+
+const settingToCacheOthers = () => {
+    let setting: any= {
+        enable_auto_rotate: enableAutoRotate.value,
+    }
+    localStorage.setItem('harmonograph_3d_setting_others', JSON.stringify(setting));
 }
 
 const onUpdateSetting = () => {
@@ -479,12 +523,13 @@ var renderer: THREE.WebGLRenderer,
     positionAttribute: THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
     colorAttribute: THREE.BufferAttribute | THREE.InterleavedBufferAttribute,
     positions: Float32Array,
-    colorMap: Float32Array;
+    colorMap: Float32Array,
+    backgroundMesh: THREE.Mesh;
 
 var frequency: number = 50,
     perspective: number = 1600,
     fov: number = 0,
-    MAX_POINTS: number = 20000,
+    MAX_POINTS: number = 30000,
     currentPossition: number = 0,
     needDepth: number = .8,
     currentDepth: number = 0,
@@ -536,7 +581,7 @@ const setScene = () => {
     // camera = new THREE.PerspectiveCamera( fov, board.value.size.width / board.value.size.height, 1, 30000 );
     // camera.position.set( 100, 100, perspective );
     
-    camera = new THREE.OrthographicCamera( board.value.size.width / - 2, board.value.size.width / 2, board.value.size.height / 2, board.value.size.height / - 2, 1, 30000 );
+    camera = new THREE.OrthographicCamera( board.value.size.width / - 2, board.value.size.width / 2, board.value.size.height / 2, board.value.size.height / - 2, .1, 30000 );
     camera.position.set( 0, 0, perspective );
     // document.body.style.perspective = `${perspective}px`;
 
@@ -563,7 +608,8 @@ const setScene = () => {
     // scene.add(light);
     // scene.add(plane);
 
-
+    generateBackground();
+    scene.add(backgroundMesh)
 
     geometry = new THREE.BufferGeometry();
     positions = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
@@ -639,6 +685,59 @@ const setScene = () => {
 
     // window.line = line
     // window.cameraControls = cameraControls
+
+    
+}
+
+const backgroundGradientDefault: BackgroundGradient = {
+    color1: '#ffffff',
+    color2: '#d7dde0',
+}
+
+const backgroundGradient = ref<BackgroundGradient>({
+    color1: backgroundGradientDefault.color1,
+    color2: backgroundGradientDefault.color2,
+});
+
+const generateBackground = () => {
+    let color1: any = helper.convertToRGB(backgroundGradient.value.color1);
+    let color2: any = helper.convertToRGB(backgroundGradient.value.color2);
+    console.log(backgroundGradient.value, color1, color2, backgroundMesh)
+    if(typeof backgroundMesh === "undefined"){
+        let g = new THREE.PlaneGeometry(2, 2);
+        let m = new THREE.ShaderMaterial({
+            uniforms: {
+                color1: { value: new THREE.Color(`rgb(${color1[0]},${color1[1]},${color1[2]})`)},
+                color2: { value: new THREE.Color(`rgb(${color2[0]},${color2[1]},${color2[2]})`)},
+                ratio: { value: board.value.size.width / board.value.size.height }
+            },
+            vertexShader: `varying vec2 vUv;
+                void main(){
+                    vUv = uv;
+                    gl_Position = vec4(position, 1.);
+                }`,
+            fragmentShader: `varying vec2 vUv;
+                uniform vec3 color1;
+                uniform vec3 color2;
+                uniform float ratio;
+                void main(){
+                    vec2 uv = (vUv - 0.5) * vec2(ratio, 1.);
+                    gl_FragColor = vec4( mix( color1, color2, length(uv)), 1. );
+                }`
+        });
+        console.log(m)
+        backgroundMesh = new THREE.Mesh(g, m);
+        backgroundMesh.frustumCulled = false;
+    }
+    else{
+        (backgroundMesh.material as THREE.ShaderMaterial).uniforms.color1.value = new THREE.Color(`rgb(${color1[0]},${color1[1]},${color1[2]})`);
+        (backgroundMesh.material as THREE.ShaderMaterial).uniforms.color2.value = new THREE.Color(`rgb(${color2[0]},${color2[1]},${color2[2]})`);
+    }
+}
+window.generateBackground = generateBackground;
+const updatedBackground = () => {
+    onUpdateSetting();
+    generateBackground();
 }
 
 const resetScene = () => {
@@ -673,7 +772,7 @@ const setControlCenterOfObject = () => {
     // cameraControls.target = new THREE.Vector3(x, y, z);
 
     cameraControls.setOrbitPoint(x,y,z)
-    console.log(cameraControls.toJSON())
+    // console.log(cameraControls.toJSON())
 
 }
 
@@ -702,6 +801,7 @@ const checkCurrentPosition = () => {
 const drawThree = () => {
     
     if(currentPossition >= MAX_POINTS){
+        console.log('Max points reached', MAX_POINTS)
         stop();
     }
     // let x = (canvas.penPos.x - canvas.pos.x) - (board.size.width / 2);
@@ -866,7 +966,24 @@ const objectPosChange = () => {
     
     let z = 0;
     if(canvas.value.depthDir == 1){
+        // old
         z = ((x+y)/2) * canvas.value.depth;
+        // console.log(z)
+
+        // // new begin
+        // let rad = 0;
+        // if(rightGear.value.child.deg <= 180){
+        //     rad = rightGear.value.child.deg / 2
+        //     console.log(1, rightGear.value.child.deg, rad)
+        // }
+        // else{
+        //     rad = (180 - (rightGear.value.child.deg - 180)) / 2;
+
+        //     console.log(2, rightGear.value.child.deg, rad)
+        // }
+        // z = rad * canvas.value.depth;//((180 - rightGear.value.child.deg) / 10) * canvas.value.depth;
+        // // console.log(rightGear.value.child.deg, z)
+        // // new end
     }
     else if(canvas.value.depthDir == 2){
         z = canvas.value.depth > 0 ? threedPosHolder.old.z + (canvas.value.depth / 10) : 0;
@@ -909,7 +1026,7 @@ const objectPosChange = () => {
     
 }
 
-const enableAutoRotate = ref(true);
+const enableAutoRotate = ref(false);
 const controlingManually = ref(false);
 const render = () => {
     // requestAnimationFrame( render );
@@ -976,11 +1093,27 @@ const stlExportRef = ref();
 const save = () => {
     // var dataURL = canvas.el.toDataURL();
     renderer.setClearColor( 0xffffff, 0 );
+    scene.remove(backgroundMesh);
     renderer.render( scene, camera );
     var dataURL = renderer.domElement.toDataURL('image/png');
     console.log(canvasimgRef.value, dataURL)
     canvasimgRef.value.href = dataURL;
     canvasimgRef.value.download = 'pintograph.png';
+    canvasimgRef.value.click();
+    renderer.setClearColor( 0xffffff, 1 );
+    scene.add(backgroundMesh);
+
+    // const result = exporter.parse( scene, { binary: true } );
+	// saveArrayBuffer( result, 'box.stl' );
+}
+const saveJpeg = () => {
+    // var dataURL = canvas.el.toDataURL();
+    renderer.setClearColor( 0xffffff, 1 );
+    renderer.render( scene, camera );
+    var dataURL = renderer.domElement.toDataURL('image/jpeg');
+    console.log(canvasimgRef.value, dataURL)
+    canvasimgRef.value.href = dataURL;
+    canvasimgRef.value.download = 'pintograph.jpeg';
     canvasimgRef.value.click();
     renderer.setClearColor( 0xffffff, 1 );
 
@@ -1079,16 +1212,38 @@ const exportGif = () => {
     canvasimgRef.value.download = 'pintograph.gif';
     canvasimgRef.value.click();
     controlingManually.value = false;
+    scene.add(backgroundMesh);
+}
+
+const reduceRatio = (width: number, height: number) => {
+    let max = 1000;
+    let _width: number = width;
+    let _height: number = height;
+    if(width > max || height > max){
+        if(width > height){
+            _width = max;
+            _height = (max / width) * height;
+        }
+        else{
+            _height = max;
+            _width = (max / height) * width;
+        }
+    }
+    return {
+        width: _width,
+        height: _height
+    }
 }
 
 const saveGif = () => {
-    
+    scene.remove(backgroundMesh);
     gif = {...gifDefault};
     gif.canvas = document.createElement( 'canvas' );
-    gif.canvas.width = canvas.value.size.width;
-    gif.canvas.height = canvas.value.size.height;
+    let gifRatio = reduceRatio(canvas.value.size.width, canvas.value.size.height);
+    gif.canvas.width = gifRatio.width;
+    gif.canvas.height = gifRatio.height;
     gif.context = gif.canvas.getContext( '2d', { willReadFrequently: true } );
-
+    console.log(gif.canvas.width * gif.canvas.height * gif.frames * 5)
     gif.buffer = new Uint8Array( gif.canvas.width * gif.canvas.height * gif.frames * 5 );
     gif.pixels = new Uint8Array( gif.canvas.width * gif.canvas.height );
     gif.writer = new GifWriter( gif.buffer, gif.canvas.width, gif.canvas.height, { loop: 0 } );
@@ -1104,7 +1259,7 @@ const generateGIF = () => {
     // gif.context.fillStyle = 'white';
     // gif.context.fillRect (0, 0, gif.canvas.width, gif.canvas.height);
     renderer.render( scene, camera );
-    gif.context.drawImage(renderer.domElement , 0, 0, gif.canvas.width, gif.canvas.height );
+    gif.context.drawImage(renderer.domElement , 0, 0, canvas.value.size.width, canvas.value.size.height, 0, 0, gif.canvas.width, gif.canvas.height );
     const data = gif.context.getImageData( 0, 0, gif.canvas.width, gif.canvas.height ).data;
     const palette: any[] = [];
 
@@ -1150,6 +1305,15 @@ const generateGIF = () => {
 const exportBtnRef = ref();
 const exportOptions = [
     {
+        label: 'JPEG',
+        command: () => {
+            if(isDrawn.value){
+                saveJpeg();
+                sidebarShow.value = false;
+            }
+        }
+    },
+    {
         label: 'PNG',
         command: () => {
             if(isDrawn.value){
@@ -1191,8 +1355,10 @@ const resetPositionOptions = [
 const machineVisibilityOptions = [
     {
         label: () => enableAutoRotate.value ? 'Disable Auto Rotate' : 'Enable Auto Rotate',
+        icon: () => enableAutoRotate.value ? 'pi pi-times' : 'pi pi-check',
         command: () => {
             enableAutoRotate.value = !enableAutoRotate.value;
+            settingToCacheOthers();
         }
     },
 ];
@@ -1340,7 +1506,7 @@ const setPreset = (config: any) => {
     resetScene();
     // canvas.context.clearRect(0, 0, canvas.el.width, canvas.el.height);
     logStartPosition(false);
-    cacheToSetting(config);
+    cacheToSetting(config, true);
     turnMotor(true);
     machineRef.value.setMachineAndGear();
     machineRef.value.setColor();
@@ -1364,6 +1530,7 @@ onMounted(() => {
     console.log('HomeView mounted')
     isMounted.value = true;
     // console.log(canvasRef.value)
+    cacheToSettingOthers();
     init();
     // console.log(machineRef.value)
     // console.log(JSON.stringify(color.value))

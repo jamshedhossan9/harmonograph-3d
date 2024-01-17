@@ -5,20 +5,30 @@
             <div class="machine_hand_forearm" ref="machine_hand_forearm_0">
                 <div class="machine_hand_forearm_tip" ref="machine_hand_forearm_0_tip"></div>
             </div>
+            <span class="screw_1"></span>
+            <span class="screw_2"></span>
         </div>
         <div class="machine_hand_arm" ref="machine_hand_arm_1">
             <div class="machine_hand_arm_display" ref="machine_hand_arm_1_display"></div>
             <div class="machine_hand_forearm" ref="machine_hand_forearm_1">
                 <div class="machine_hand_forearm_tip" ref="machine_hand_forearm_1_tip"></div>
             </div>
+            <span class="screw_1"></span>
+            <span class="screw_2"></span>
         </div>
         <div class="machine_hand_arm_bridge" ref="machine_hand_arm_bridge">
             <div class="machine_hand_arm_bridge_column" ref="machine_hand_arm_bridge_column">
                 <div class="machine_hand_arm_bridge_column_tip" ref="machine_hand_arm_bridge_column_tip"></div>
             </div>
         </div>
-        <div class="machine_hand_palm" ref="machine_hand_palm_0"></div>
-        <div class="machine_hand_palm" ref="machine_hand_palm_1"></div>
+        <div class="machine_hand_palm" ref="machine_hand_palm_0">
+            <span class="screw_1"></span>
+            <span class="screw_2"></span>
+        </div>
+        <div class="machine_hand_palm" ref="machine_hand_palm_1">
+            <span class="screw_1"></span>
+            <span class="screw_2"></span>
+        </div>
         <div class="machine_hand_palm_bridge" ref="machine_hand_palm_bridge">
             <div class="machine_hand_palm_bridge_column" ref="machine_hand_palm_bridge_column">
                 <div class="machine_hand_palm_bridge_column_tip" ref="machine_hand_palm_bridge_column_tip">

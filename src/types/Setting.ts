@@ -89,4 +89,9 @@ type ColorType = {
     opacity: number,
 }
 
-export type { SettingGearType, BoardType, CanvasType, ColorType, HandType }
+type BackgroundGradient = {
+    color1: string,
+    color2: string,
+}
+
+export type { SettingGearType, BoardType, CanvasType, ColorType, HandType, BackgroundGradient }

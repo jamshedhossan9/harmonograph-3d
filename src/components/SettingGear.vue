@@ -40,7 +40,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.wallDistance" :step="1" :min="0" :max="40" suffix=" %" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="currentValue.wallDistance" :step="1" :min="0" :max="40" suffix=" %" showButtons class="w-full" @input="currentValue.wallDistance = ($event.value ?? 0) as number; updateModel(); updatePosition();"/>
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.wallDistance" :step="1"  :min="0" :max="40" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
@@ -62,7 +62,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.deg" :step="1" :min="0" :max="360" suffix=" Deg" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="currentValue.deg" :step="1" :min="0" :max="360" suffix=" Deg" showButtons class="w-full" @input="currentValue.deg = ($event.value ?? 0) as number; updateModel(); updatePosition();"  />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.deg" :step="1"  :min="0" :max="360" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
@@ -84,7 +84,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.child.conDeg" :step="1" :min="0" :max="360" suffix=" Deg" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="currentValue.child.conDeg" :step="1" :min="0" :max="360" suffix=" Deg" showButtons class="w-full" @input="currentValue.child.conDeg = ($event.value ?? 0) as number; updateModel(); updatePosition();" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.child.conDeg" :step="1"  :min="0" :max="360" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
@@ -106,7 +106,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.parent.speed" :step=".10" :min="0" :max="300" suffix=" SPR" showButtons class="w-full" @update:modelValue="updateModel" />
+                        <InputNumber v-model="currentValue.parent.speed" :step=".10" :min="0" :max="300" suffix=" SPR" showButtons class="w-full" @input="currentValue.parent.speed = ($event.value ?? 0) as number; updateModel()" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.parent.speed" :step=".10" :min="0" :max="300" class="w-full" @update:modelValue="updateModel" />
@@ -128,7 +128,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.child.speed" :step=".10" :min="0" :max="300" suffix=" SPR" showButtons class="w-full" @update:modelValue="updateModel" />
+                        <InputNumber v-model="currentValue.child.speed" :step=".10" :min="0" :max="300" suffix=" SPR" showButtons class="w-full" @input="currentValue.child.speed = ($event.value ?? 0) as number; updateModel()" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.child.speed" :step=".10" :min="0" :max="300" class="w-full" @update:modelValue="updateModel" />
@@ -150,10 +150,10 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.parent.size" :step=".5" :min="5" :max="30" suffix=" %" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="currentValue.parent.size" :step=".5" :min="5" :max="40" suffix=" %" showButtons class="w-full" @input="currentValue.parent.size = ($event.value ?? 0) as number; updateModel(); updatePosition();"  />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
-                                <Slider v-model="currentValue.parent.size" :step=".5" :min="5" :max="30" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                                <Slider v-model="currentValue.parent.size" :step=".5" :min="5" :max="40" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
                             </div>
                             <div>
                                 <Button class="range-aling-btn" icon="pi pi-chevron-down"></Button>
@@ -172,7 +172,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.child.size" :step=".5" :min="20" :max="80" suffix=" %" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="currentValue.child.size" :step=".5" :min="20" :max="80" suffix=" %" showButtons class="w-full"  @input="currentValue.child.size = ($event.value ?? 0) as number; updateModel(); updatePosition();" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.child.size" :step=".5" :min="20" :max="80" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
@@ -241,7 +241,8 @@
     const alterSide = ref<string>('Right');
 
     const updateModel = () => {
-        // console.log(currentValue.value)
+        // console.log(JSON.stringify(e))
+        console.log(JSON.stringify(currentValue.value))
         emit('update:modelValue', currentValue)
     }
 

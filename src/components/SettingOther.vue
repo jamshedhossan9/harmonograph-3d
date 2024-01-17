@@ -12,7 +12,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.arm.length" :step="1" :min="5" :max="100" suffix=" %" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="currentValue.arm.length" :step="1" :min="5" :max="100" suffix=" %" showButtons class="w-full" @input="currentValue.arm.length = ($event.value ?? 0) as number; updateModel(); updatePosition();" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.arm.length" :step="1"  :min="5" :max="100" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
@@ -34,7 +34,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.forearm.length" :step="1" :min="10" :max="50" suffix=" %" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="currentValue.forearm.length" :step="1" :min="10" :max="50" suffix=" %" showButtons class="w-full" @input="currentValue.forearm.length = ($event.value ?? 0) as number; updateModel(); updatePosition();"  />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.forearm.length" :step="1"  :min="10" :max="50" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
@@ -56,7 +56,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="currentValue.palm.length" :step="1" :min="100" :max="130" suffix=" %" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="currentValue.palm.length" :step="1" :min="100" :max="130" suffix=" %" showButtons class="w-full"  @input="currentValue.palm.length = ($event.value ?? 0) as number; updateModel(); updatePosition();" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="currentValue.palm.length" :step="1"  :min="100" :max="130" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
@@ -78,7 +78,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="accuracy" :step="1" :min="0" :max="8" showButtons class="w-full" @update:modelValue="updateModel" />
+                        <InputNumber v-model="accuracy" :step="1" :min="0" :max="8" showButtons class="w-full" @input="accuracy = ($event.value ?? 0) as number; updateModel();" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="accuracy" :step="1"  :min="0" :max="8" class="w-full" @update:modelValue="updateModel" />
@@ -103,7 +103,7 @@
                         <Dropdown v-model="depthDir" :options="depthDirOptions" optionLabel="name" optionValue="value" placeholder="Depth direction" class="w-full border-noround-right" @update:modelValue="updateModel(); updatePosition()" />
                     </div>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="depth" :step="1" :min="0" :max="12" showButtons class="w-full" @update:modelValue="updateModel(); updatePosition()" />
+                        <InputNumber v-model="depth" :step="1" :min="0" :max="12" showButtons class="w-full"  @input="depth = ($event.value ?? 0) as number; updateModel(); updatePosition();" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="depth" :step="1"  :min="0" :max="12" class="w-full" @update:modelValue="updateModel(); updatePosition()" />
@@ -125,7 +125,7 @@
                         </span>
                     </InputGroupAddon>
                     <div class="flex-grow-1">
-                        <InputNumber v-model="opacity" :step=".1" :min=".1" :max="1" showButtons class="w-full" @update:modelValue="updateModel" />
+                        <InputNumber v-model="opacity" :step=".1" :min=".1" :max="1" showButtons class="w-full" @input="opacity = ($event.value ?? 0) as number; updateModel();" />
                         <div class="flex range-container">
                             <div class="flex-grow-1">
                                 <Slider v-model="opacity" :step=".1"  :min=".1" :max="1" class="w-full" @update:modelValue="updateModel" />
@@ -148,10 +148,33 @@
                     </InputGroupAddon>
                     <div class="flex-grow-1 flex border-1 surface-border border-round-right">
                         <div class="flex-grow-1 color-container border-right-1 surface-border">
-                            <ColorPicker v-model="colorStart"  @update:modelValue="updateColor($event, 1)" />
+                            <!-- <ColorPicker v-model="colorStart"  @update:modelValue="updateColor($event, 1)" /> -->
+                            <input type="color" class="color-picker" v-model="colorStart" @input="updateColor($event, 1)">
                         </div>
                         <div class="flex-grow-1 color-container">
-                            <ColorPicker v-model="colorEnd"  @update:modelValue="updateColor($event, 2)" />
+                            <!-- <ColorPicker v-model="colorEnd"  @update:modelValue="updateColor($event, 2)" /> -->
+                            <input type="color" class="color-picker" v-model="colorEnd" @input="updateColor($event, 2)">
+                        </div>
+                    </div>
+                </InputGroup>
+            </div>
+            <div>
+                <InputGroup class="input-color-group">
+                    <InputGroupAddon class="gap-2">
+                        Background Color
+                        <span 
+                            v-tooltip.left="`Choose different color in both selector to get a gradient Background.`">
+                            <span class="pi pi-info-circle"></span>
+                        </span>
+                    </InputGroupAddon>
+                    <div class="flex-grow-1 flex border-1 surface-border border-round-right">
+                        <div class="flex-grow-1 color-container border-right-1 surface-border">
+                            <!-- <ColorPicker v-model="backgroundGradient.color1"  @update:modelValue="updateBackground" /> -->
+                            <input type="color" class="color-picker" v-model="backgroundGradient.color1" @input="updateBackground($event, 1)">
+                        </div>
+                        <div class="flex-grow-1 color-container">
+                            <!-- <ColorPicker v-model="backgroundGradient.color2"  @update:modelValue="updateBackground" /> -->
+                            <input type="color" class="color-picker" v-model="backgroundGradient.color2" @input="updateBackground($event, 2)">
                         </div>
                     </div>
                 </InputGroup>
@@ -163,14 +186,13 @@
 <script setup lang="ts">
     import { ref, onMounted, watch, reactive } from 'vue'
     import type { PropType } from 'vue'
-    import type { HandType, ColorType } from '@/types/Setting';
+    import type { HandType, ColorType, BackgroundGradient } from '@/types/Setting';
     import SelectButton from 'primevue/selectbutton';
     import Slider from 'primevue/slider';
     import InputNumber from 'primevue/inputnumber';
     import InputGroup from 'primevue/inputgroup';
     import InputGroupAddon from 'primevue/inputgroupaddon';
     import Button from 'primevue/button';
-    import ColorPicker from 'primevue/colorpicker';
     import Dropdown from 'primevue/dropdown';
     import helper from '@/helpers/helper';
 
@@ -205,6 +227,10 @@
             type: Object as PropType<ColorType>,
             default: null
         },
+        backgroundGradient: {
+            type: Object as PropType<BackgroundGradient>,
+            default: null
+        },
         accuracy: {
             type: Number,
             default: 2
@@ -231,6 +257,7 @@
         'update:depth',
         'update:depthDir',
         'update:opacity',
+        'update:backgroundGradient',
     ])
 
     const depthDirOptions = ref([
@@ -243,14 +270,16 @@
     const depthDir = ref(props.depthDir);
     const color = ref(props.color);
     const opacity = ref(props.opacity);
+    const backgroundGradient = ref(props.backgroundGradient);
+    console.log(backgroundGradient.value)
     
     
     const removeColorHash = (value: string) => {
         return (value.charAt(0) == '#') ? value.substring(1, 7) : value;
     }
 
-    const colorStart = ref(removeColorHash(color.value.start));
-    const colorEnd = ref(removeColorHash(color.value.end));
+    const colorStart = ref((color.value.start));
+    const colorEnd = ref((color.value.end));
 
     const updateModel = () => {
         emit('update:accuracy', accuracy)
@@ -262,16 +291,32 @@
 
     const updateColor = (e: any, no: number) => {
         // console.log(e, no)
-        color.value.start = `#${colorStart.value}`;
         if(no == 1){
-            colorEnd.value = colorStart.value;
+            colorStart.value = e.target.value;
+            colorEnd.value = e.target.value;
         }
-        color.value.end = `#${colorEnd.value}`;
+        else if(no == 2){
+            colorEnd.value = e.target.value;
+        }
+        color.value.start = `${colorStart.value}`;
+        color.value.end = `${colorEnd.value}`;
         emit('update:color', color);
     }
 
     const updatePosition = () => {
         emit('update:position')
+    }
+
+    const updateBackground = (e: any, no: number) => {
+        console.log(e.target.value)
+        if(no == 1){
+            backgroundGradient.value.color1 = e.target.value;
+        }
+        else if(no == 2){
+            backgroundGradient.value.color2 = e.target.value;
+        }
+        console.log(backgroundGradient.value)
+        emit('update:backgroundGradient', backgroundGradient)
     }
 
     const onColorStartInput = (e: any) => {
@@ -290,8 +335,8 @@
 
     watch(() => [props.color.start, props.color.end], () => {
         color.value = props.color;
-        colorStart.value = removeColorHash(color.value.start);
-        colorEnd.value = removeColorHash(color.value.end);
+        colorStart.value = (color.value.start);
+        colorEnd.value = (color.value.end);
     })
     
 

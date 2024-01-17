@@ -253,26 +253,14 @@
     }
 
 
-    const removeColorHash = (value: string) => {
-        return (value.charAt(0) == '#') ? value.substring(1, 7) : value;
-    }
-
     const colorRange = (len: number = 10, opacity: number = 1) => {
         if(len < 2){
             len = 2;
         }
         len = helper.parseInt(len/2);
 
-        function convertToRGB (hex: string) {
-            var color = [];
-            color[0] = helper.parseInt ((removeColorHash(hex)).substring (0, 2), 16);
-            color[1] = helper.parseInt ((removeColorHash(hex)).substring (2, 4), 16);
-            color[2] = helper.parseInt ((removeColorHash(hex)).substring (4, 6), 16);
-            return color;
-        }
-
-        var start = convertToRGB (color.value.start);
-        var end   = convertToRGB (color.value.end); 
+        var start = helper.convertToRGB (color.value.start);
+        var end   = helper.convertToRGB (color.value.end); 
         var alpha = 0;
         var colors = [];
         for (let i = 0; i < len; i++) {

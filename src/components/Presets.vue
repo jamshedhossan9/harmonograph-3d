@@ -4,6 +4,7 @@
         <div class="grid justify-content-center preset_drawings_container">
             <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" v-for="item in presetImageUrls">
                 <div class="preset_element" @click="onSelect(item.no)" :data-id="item.no">
+                    <h3>{{ item.no }}</h3>
                     <img class="w-full" :src="item.url" alt="">
                 </div>
             </div>
@@ -36,10 +37,14 @@
         11, 12, 
         21, 22, 23, 24, 25, 26, 13, 14, 16, 17,
     ];
+    const jpegImages = [ 16, 17 ];
     const presetImageUrls = ref<any>([]);
 
     for(let item of presetOrder){
         let temp = new URL(`../assets/presets/preset${item}.png`, import.meta.url);
+        if(jpegImages.indexOf(item) !== -1){
+            temp = new URL(`../assets/presets/preset${item}.jpeg`, import.meta.url);
+        }
         presetImageUrls.value.push({
             no: item,
             url: temp.href
@@ -59,6 +64,7 @@
         presetConfig.value[index] = config;
     }
 
+    // updated
     addToPresetConfig(1, {
         "color": {
             "start": "#d01516",
@@ -66,19 +72,19 @@
             "opacity": 0.3
         },
         "canvas": {
-            "accuracy": 1,
-            "depth": 8,
+            "accuracy": 6,
+            "depth": 10,
             "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 315,
-                    "wallDistance": 10,
+                    "wallDistance": 26,
                     "parent": {
                         "dir": 1,
                         "speed": 74,
-                        "size": 15
+                        "size": 20
                     },
                     "child": {
                         "dir": 1,
@@ -89,11 +95,11 @@
                 },
                 "1": {
                     "deg": 171,
-                    "wallDistance": 10,
+                    "wallDistance": 0,
                     "parent": {
                         "dir": -1,
                         "speed": 120,
-                        "size": 30
+                        "size": 38
                     },
                     "child": {
                         "dir": -1,
@@ -116,62 +122,68 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(2, {
-        color:{
-            start: '#d01516',
-            end: '#d01516',
+        "color": {
+            "start": "#d01516",
+            "end": "#d01516",
+            "opacity": 0.5
         },
-        machine: {
-            gear: {
-                0: {
-                    deg: 73,
-                    wallDistance: 26,
-                    parent: {
-                        dir: 1,
-                        speed: 74,
-                        deg: 0,
-                        size: 17,
+        "canvas": {
+            "accuracy": 6,
+            "depth": 10,
+            "depthDir": 1
+        },
+        "machine": {
+            "gear": {
+                "0": {
+                    "deg": 73,
+                    "wallDistance": 26,
+                    "parent": {
+                        "dir": 1,
+                        "speed": 74,
+                        "size": 30
                     },
-                    child: {
-                        dir: 1,
-                        speed: 2,
-                        deg: 0,
-                        size: 52,
-                        conDeg: 0,
+                    "child": {
+                        "dir": 1,
+                        "speed": 2,
+                        "size": 52,
+                        "conDeg": 0
+                    }
+                },
+                "1": {
+                    "deg": 64,
+                    "wallDistance": 30,
+                    "parent": {
+                        "dir": -1,
+                        "speed": 116,
+                        "size": 30
                     },
-                },
-                1: {
-                    deg: 64,
-                    wallDistance: 30,
-                    parent: {
-                        dir: -1,
-                        speed: 116,
-                        deg: 0,
-                        size: 17,
-                    },
-                    child: {
-                        dir: -1,
-                        speed: 2,
-                        deg: 0,
-                        size: 37.5,
-                        conDeg: 0,
-                    },
-                },
-            },
-            hand: {
-                arm: {
-                    length: 21,
-                },
-                forearm:{
-                    length: 10,
-                },
-                palm:{
-                    length: 100,
+                    "child": {
+                        "dir": -1,
+                        "speed": 2,
+                        "size": 37.5,
+                        "conDeg": 0
+                    }
                 }
             },
+            "hand": {
+                "arm": {
+                    "length": 21
+                },
+                "forearm": {
+                    "length": 10
+                },
+                "palm": {
+                    "length": 100
+                }
+            }
         }
     });
     addToPresetConfig(3, presetConfig.value[2]);
+
+    // updated
     addToPresetConfig(4, {
         "color": {
             "start": "#000000",
@@ -180,18 +192,18 @@
         },
         "canvas": {
             "accuracy": 1,
-            "depth": 10,
+            "depth": 8,
             "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 206,
-                    "wallDistance": 15,
+                    "wallDistance": 21,
                     "parent": {
                         "dir": 1,
                         "speed": 239,
-                        "size": 20
+                        "size": 27
                     },
                     "child": {
                         "dir": -1,
@@ -202,16 +214,75 @@
                 },
                 "1": {
                     "deg": 260,
-                    "wallDistance": 15,
+                    "wallDistance": 0,
                     "parent": {
                         "dir": -1,
                         "speed": 182,
-                        "size": 30
+                        "size": 36
                     },
                     "child": {
                         "dir": 1,
                         "speed": 3,
                         "size": 80,
+                        "conDeg": 0
+                    }
+                }
+            },
+            "hand": {
+                "arm": {
+                    "length": 5
+                },
+                "forearm": {
+                    "length": 10
+                },
+                "palm": {
+                    "length": 100
+                }
+            }
+        }
+    });
+
+    // updated
+    addToPresetConfig(5, {
+        "color": {
+            "start": "#000000",
+            "end": "#000000",
+            "opacity": 0.5
+        },
+        "canvas": {
+            "accuracy": 1,
+            "depth": 8,
+            "depthDir": 1
+        },
+        "machine": {
+            "gear": {
+                "0": {
+                    "deg": 206,
+                    "wallDistance": 29,
+                    "parent": {
+                        "dir": -1,
+                        "speed": 239,
+                        "size": 21.5
+                    },
+                    "child": {
+                        "dir": 1,
+                        "speed": 2,
+                        "size": 80,
+                        "conDeg": 0
+                    }
+                },
+                "1": {
+                    "deg": 260,
+                    "wallDistance": 12,
+                    "parent": {
+                        "dir": 1,
+                        "speed": 104,
+                        "size": 34
+                    },
+                    "child": {
+                        "dir": -1,
+                        "speed": 2,
+                        "size": 73.5,
                         "conDeg": 0
                     }
                 }
@@ -229,120 +300,68 @@
             }
         }
     });
-    addToPresetConfig(5, {
-        "canvas": {
-            "accuracy": 1
-        },
-        color:{
-            start: '#000000',
-            end: '#000000',
-        },
-        machine: {
-            gear: {
-                0: {
-                    deg: 206,
-                    wallDistance: 30,
-                    parent: {
-                        dir: -1,
-                        speed: 239,
-                        deg: 0,
-                        size: 14,
-                    },
-                    child: {
-                        dir: 1,
-                        speed: 1,
-                        deg: 0,
-                        size: 80,
-                        conDeg: 0,
-                    },
-                },
-                1: {
-                    deg: 260,
-                    wallDistance: 36,
-                    parent: {
-                        dir: 1,
-                        speed: 104,
-                        deg: 0,
-                        size: 22,
-                    },
-                    child: {
-                        dir: -1,
-                        speed: 1,
-                        deg: 0,
-                        size: 73.5,
-                        conDeg: 0,
-                    },
-                },
-            },
-            hand: {
-                arm: {
-                    length: 30,
-                },
-                forearm:{
-                    length: 30,
-                },
-                palm:{
-                    length: 103,
-                }
-            },
-        }
-    });
+
+    // updated
     addToPresetConfig(6, {
+        "color": {
+            "start": "#098b8d",
+            "end": "#098b8d",
+            "opacity": 0.5
+        },
         "canvas": {
             "accuracy": 6,
             "depth": 8,
-        },
-        "color": {
-            "start": "#098b8d",
-            "end": "#098b8d"
+            "depthDir": 1
         },
         "machine": {
-        "gear": {
-            "0": {
-            "deg": 29,
-            "wallDistance": 25,
-            "parent": {
-                "dir": -1,
-                "speed": 76,
-                "size": 14.5
+            "gear": {
+                "0": {
+                    "deg": 29,
+                    "wallDistance": 5,
+                    "parent": {
+                        "dir": -1,
+                        "speed": 76,
+                        "size": 29
+                    },
+                    "child": {
+                        "dir": -1,
+                        "speed": 1,
+                        "size": 61,
+                        "conDeg": 170
+                    }
+                },
+                "1": {
+                    "deg": 177,
+                    "wallDistance": 5,
+                    "parent": {
+                        "dir": -1,
+                        "speed": 129,
+                        "size": 28
+                    },
+                    "child": {
+                        "dir": -1,
+                        "speed": 1,
+                        "size": 34,
+                        "conDeg": 80
+                    }
+                }
             },
-            "child": {
-                "dir": -1,
-                "speed": 1,
-                "size": 61,
-                "conDeg": 170
+            "hand": {
+                "arm": {
+                    "length": 5
+                },
+                "forearm": {
+                    "length": 10
+                },
+                "palm": {
+                    "length": 100
+                }
             }
-            },
-            "1": {
-            "deg": 177,
-            "wallDistance": 31,
-            "parent": {
-                "dir": -1,
-                "speed": 129,
-                "size": 14
-            },
-            "child": {
-                "dir": -1,
-                "speed": 1,
-                "size": 34,
-                "conDeg": 80
-            }
-            }
-        },
-        "hand": {
-            "arm": {
-            "length": 5
-            },
-            "forearm": {
-            "length": 10
-            },
-            "palm": {
-            "length": 100
-            }
-        }
         }
     });
     addToPresetConfig(7, presetConfig.value[6]);
+
+    // updated
     addToPresetConfig(8, {
         "color": {
             "start": "#0f2870",
@@ -350,18 +369,18 @@
         },
         "canvas": {
             "accuracy": 2,
-            "depth": 6,
-            "depthDir": 1,
+            "depth": 1,
+            "depthDir": 2
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 360,
-                    "wallDistance": 25,
+                    "wallDistance": 10,
                     "parent": {
                         "dir": 1,
                         "speed": 36,
-                        "size": 13.5
+                        "size": 27
                     },
                     "child": {
                         "dir": 1,
@@ -372,11 +391,11 @@
                 },
                 "1": {
                     "deg": 99,
-                    "wallDistance": 29,
+                    "wallDistance": 10,
                     "parent": {
                         "dir": -1,
                         "speed": 300,
-                        "size": 14
+                        "size": 28
                     },
                     "child": {
                         "dir": -1,
@@ -402,24 +421,87 @@
     addToPresetConfig(9, presetConfig.value[8]);
     addToPresetConfig(10, presetConfig.value[8]);
     addToPresetConfig(11, presetConfig.value[8]);
-    addToPresetConfig(12, presetConfig.value[8]);
+
+    // updated
+    addToPresetConfig(12, {
+        "color": {
+            "start": "#19c9cc",
+            "end": "#389ae0",
+            "opacity": 0.3
+        },
+        "canvas": {
+            "accuracy": 2,
+            "depth": 1,
+            "depthDir": 2
+        },
+        "machine": {
+            "gear": {
+                "0": {
+                    "deg": 360,
+                    "wallDistance": 10,
+                    "parent": {
+                        "dir": 1,
+                        "speed": 36,
+                        "size": 27
+                    },
+                    "child": {
+                        "dir": 1,
+                        "speed": 0.2,
+                        "size": 42.5,
+                        "conDeg": 0
+                    }
+                },
+                "1": {
+                    "deg": 99,
+                    "wallDistance": 10,
+                    "parent": {
+                        "dir": -1,
+                        "speed": 300,
+                        "size": 28
+                    },
+                    "child": {
+                        "dir": -1,
+                        "speed": 0.2,
+                        "size": 20,
+                        "conDeg": 0
+                    }
+                }
+            },
+            "hand": {
+                "arm": {
+                    "length": 5
+                },
+                "forearm": {
+                    "length": 10
+                },
+                "palm": {
+                    "length": 100
+                }
+            }
+        }
+    });
+
+    // updated
     addToPresetConfig(13, {
         "color": {
             "start": "#000000",
-            "end": "#000000"
+            "end": "#000000",
+            "opacity": 0.5
         },
         "canvas": {
-            "accuracy": 1
+            "accuracy": 1,
+            "depth": 4,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 325,
-                    "wallDistance": 25,
+                    "wallDistance": 5,
                     "parent": {
                         "dir": 1,
                         "speed": 177,
-                        "size": 11
+                        "size": 25
                     },
                     "child": {
                         "dir": 1,
@@ -430,11 +512,11 @@
                 },
                 "1": {
                     "deg": 199,
-                    "wallDistance": 31,
+                    "wallDistance": 5,
                     "parent": {
                         "dir": -1,
                         "speed": 1,
-                        "size": 11
+                        "size": 25
                     },
                     "child": {
                         "dir": -1,
@@ -446,35 +528,40 @@
             },
             "hand": {
                 "arm": {
-                    "length": 8
+                    "length": 5
                 },
                 "forearm": {
-                    "length": 31
+                    "length": 10
                 },
                 "palm": {
-                    "length": 127
+                    "length": 100
                 }
             }
         }
     });
     addToPresetConfig(14, presetConfig.value[13]);
+
+    // updated
     addToPresetConfig(15, {
         "color": {
             "start": "#d00101",
-            "end": "#d00101"
+            "end": "#d00101",
+            "opacity": 0.5
         },
         "canvas": {
-            "accuracy": 1
+            "accuracy": 1,
+            "depth": 12,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 226,
-                    "wallDistance": 26,
+                    "wallDistance": 1,
                     "parent": {
                         "dir": -1,
                         "speed": 239,
-                        "size": 10.5
+                        "size": 21
                     },
                     "child": {
                         "dir": 1,
@@ -485,11 +572,11 @@
                 },
                 "1": {
                     "deg": 240,
-                    "wallDistance": 36,
+                    "wallDistance": 25,
                     "parent": {
                         "dir": 1,
                         "speed": 182,
-                        "size": 6.5
+                        "size": 13
                     },
                     "child": {
                         "dir": -1,
@@ -501,7 +588,7 @@
             },
             "hand": {
                 "arm": {
-                    "length": 30
+                    "length": 5
                 },
                 "forearm": {
                     "length": 43
@@ -512,53 +599,62 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(16, {
         "color": {
-            "start": "#000000",
-            "end": "#000000"
+            "start": "#ffffff",
+            "end": "#ffffff",
+            "opacity": 1
+        },
+        "background": {
+            "color1": "#909292",
+            "color2": "#000000"
         },
         "canvas": {
-            "accuracy": 1
+            "accuracy": 1,
+            "depth": 8,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
-                    "deg": 325,
-                    "wallDistance": 28,
+                    "deg": 36,
+                    "wallDistance": 8,
                     "parent": {
                         "dir": 1,
-                        "speed": 148,
-                        "size": 12
-                    },
-                    "child": {
-                        "dir": 1,
-                        "speed": 1,
-                        "size": 56,
-                        "conDeg": 0
-                    }
-                },
-                "1": {
-                    "deg": 139,
-                    "wallDistance": 39,
-                    "parent": {
-                        "dir": 1,
-                        "speed": 3,
-                        "size": 11
+                        "speed": 80,
+                        "size": 40
                     },
                     "child": {
                         "dir": -1,
-                        "speed": 3,
-                        "size": 43,
-                        "conDeg": 0
+                        "speed": 2,
+                        "size": 60,
+                        "conDeg": 181
+                    }
+                },
+                "1": {
+                    "deg": 0,
+                    "wallDistance": 8,
+                    "parent": {
+                        "dir": -1,
+                        "speed": 300,
+                        "size": 40
+                    },
+                    "child": {
+                        "dir": 1,
+                        "speed": 2,
+                        "size": 60,
+                        "conDeg": 199
                     }
                 }
             },
             "hand": {
                 "arm": {
-                    "length": 8
+                    "length": 5
                 },
                 "forearm": {
-                    "length": 50
+                    "length": 10
                 },
                 "palm": {
                     "length": 100
@@ -567,99 +663,52 @@
         }
     });
 
+    // updated
     addToPresetConfig(17, {
         "color": {
-            "start": "#000000",
-            "end": "#000000"
+            "start": "#fbe7cb",
+            "end": "#fbe7cb",
+            "opacity": 1
+        },
+        "background": {
+            "color1": "#a39595",
+            "color2": "#8b2323"
         },
         "canvas": {
-            "accuracy": 1
+            "accuracy": 1,
+            "depth": 8,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
-                    "deg": 325,
-                    "wallDistance": 28,
+                    "deg": 36,
+                    "wallDistance": 8,
                     "parent": {
                         "dir": 1,
-                        "speed": 165,
-                        "size": 12
+                        "speed": 250,
+                        "size": 40
                     },
                     "child": {
-                        "dir": 1,
-                        "speed": 1,
-                        "size": 56,
-                        "conDeg": 0
+                        "dir": -1,
+                        "speed": 2,
+                        "size": 60,
+                        "conDeg": 181
                     }
                 },
                 "1": {
-                    "deg": 139,
-                    "wallDistance": 39,
+                    "deg": 80,
+                    "wallDistance": 8,
                     "parent": {
                         "dir": -1,
-                        "speed": 3,
-                        "size": 11
+                        "speed": 250,
+                        "size": 40
                     },
                     "child": {
-                        "dir": -1,
-                        "speed": 3,
-                        "size": 43,
-                        "conDeg": 0
-                    }
-                }
-            },
-            "hand": {
-                "arm": {
-                    "length": 8
-                },
-                "forearm": {
-                    "length": 50
-                },
-                "palm": {
-                    "length": 130
-                }
-            }
-        }
-    });
-    addToPresetConfig(18, {
-        "color": {
-            "start": "#f9539b",
-            "end": "#f9539b",
-            "opacity": 0.1
-        },
-        "canvas": {
-            "accuracy": 4
-        },
-        "machine": {
-            "gear": {
-                "0": {
-                    "deg": 168,
-                    "wallDistance": 30,
-                    "parent": {
                         "dir": 1,
-                        "speed": 100,
-                        "size": 12
-                    },
-                    "child": {
-                        "dir": -1,
-                        "speed": 0.2,
-                        "size": 50,
-                        "conDeg": 0
-                    }
-                },
-                "1": {
-                    "deg": 118,
-                    "wallDistance": 30,
-                    "parent": {
-                        "dir": -1,
-                        "speed": 160,
-                        "size": 12
-                    },
-                    "child": {
-                        "dir": -1,
-                        "speed": 0.2,
-                        "size": 50,
-                        "conDeg": 52
+                        "speed": 3,
+                        "size": 60,
+                        "conDeg": 70
                     }
                 }
             },
@@ -676,24 +725,28 @@
             }
         }
     })
+
+    // updated
     addToPresetConfig(19, {
         "color": {
             "start": "#6715cb",
             "end": "#6715cb",
-            "opacity": .3,
+            "opacity": 0.3
         },
         "canvas": {
-            "accuracy": 4
+            "accuracy": 4,
+            "depth": 6,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 168,
-                    "wallDistance": 30,
+                    "wallDistance": 10,
                     "parent": {
                         "dir": 1,
                         "speed": 100,
-                        "size": 12
+                        "size": 25
                     },
                     "child": {
                         "dir": -1,
@@ -704,11 +757,11 @@
                 },
                 "1": {
                     "deg": 118,
-                    "wallDistance": 30,
+                    "wallDistance": 10,
                     "parent": {
                         "dir": -1,
                         "speed": 160,
-                        "size": 12
+                        "size": 25.5
                     },
                     "child": {
                         "dir": -1,
@@ -731,6 +784,8 @@
             }
         }
     })
+
+    // updated
     addToPresetConfig(20, {
         "color": {
             "start": "#6715cb",
@@ -738,17 +793,19 @@
             "opacity": 0.3
         },
         "canvas": {
-            "accuracy": 4
+            "accuracy": 4,
+            "depth": 8,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 168,
-                    "wallDistance": 30,
+                    "wallDistance": 12,
                     "parent": {
                         "dir": 1,
                         "speed": 200,
-                        "size": 18
+                        "size": 34
                     },
                     "child": {
                         "dir": -1,
@@ -759,11 +816,11 @@
                 },
                 "1": {
                     "deg": 116,
-                    "wallDistance": 30,
+                    "wallDistance": 12,
                     "parent": {
                         "dir": -1,
                         "speed": 300,
-                        "size": 18
+                        "size": 34
                     },
                     "child": {
                         "dir": -1,
@@ -786,6 +843,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(21, {
         "color": {
             "start": "#0781b6",
@@ -793,17 +852,19 @@
             "opacity": 0.3
         },
         "canvas": {
-            "accuracy": 4
+            "accuracy": 4,
+            "depth": 6,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 206,
-                    "wallDistance": 30,
+                    "wallDistance": 13,
                     "parent": {
                         "dir": -1,
                         "speed": 146,
-                        "size": 10.5
+                        "size": 21
                     },
                     "child": {
                         "dir": 1,
@@ -814,11 +875,11 @@
                 },
                 "1": {
                     "deg": 61,
-                    "wallDistance": 36,
+                    "wallDistance": 13,
                     "parent": {
                         "dir": 1,
                         "speed": 80,
-                        "size": 14
+                        "size": 28
                     },
                     "child": {
                         "dir": -1,
@@ -841,6 +902,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(22, {
         "color": {
             "start": "#cb4c15",
@@ -848,17 +911,19 @@
             "opacity": 0.2
         },
         "canvas": {
-            "accuracy": 4
+            "accuracy": 4,
+            "depth": 8,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 184,
-                    "wallDistance": 37,
+                    "wallDistance": 27,
                     "parent": {
                         "dir": 1,
                         "speed": 270,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": -1,
@@ -869,11 +934,11 @@
                 },
                 "1": {
                     "deg": 119,
-                    "wallDistance": 40,
+                    "wallDistance": 11,
                     "parent": {
                         "dir": -1,
                         "speed": 295,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": 1,
@@ -896,6 +961,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(23, {
         "color": {
             "start": "#e60505",
@@ -903,17 +970,19 @@
             "opacity": 0.2
         },
         "canvas": {
-            "accuracy": 4
+            "accuracy": 4,
+            "depth": 8,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 184,
-                    "wallDistance": 37,
+                    "wallDistance": 27,
                     "parent": {
                         "dir": 1,
                         "speed": 260,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": -1,
@@ -924,11 +993,11 @@
                 },
                 "1": {
                     "deg": 119,
-                    "wallDistance": 40,
+                    "wallDistance": 11,
                     "parent": {
                         "dir": -1,
                         "speed": 295,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": 1,
@@ -951,6 +1020,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(24, {
         "color": {
             "start": "#5e60ce",
@@ -958,17 +1029,19 @@
             "opacity": 0.2
         },
         "canvas": {
-            "accuracy": 6
+            "accuracy": 6,
+            "depth": 8,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 184,
-                    "wallDistance": 37,
+                    "wallDistance": 27,
                     "parent": {
                         "dir": 1,
                         "speed": 250,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": -1,
@@ -979,11 +1052,11 @@
                 },
                 "1": {
                     "deg": 119,
-                    "wallDistance": 40,
+                    "wallDistance": 11,
                     "parent": {
                         "dir": -1,
                         "speed": 295,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": 1,
@@ -1006,6 +1079,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(25, {
         "color": {
             "start": "#8187dc",
@@ -1013,17 +1088,19 @@
             "opacity": 0.2
         },
         "canvas": {
-            "accuracy": 6
+            "accuracy": 6,
+            "depth": 8,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 184,
-                    "wallDistance": 37,
+                    "wallDistance": 27,
                     "parent": {
                         "dir": 1,
                         "speed": 240,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": -1,
@@ -1034,11 +1111,11 @@
                 },
                 "1": {
                     "deg": 119,
-                    "wallDistance": 40,
+                    "wallDistance": 11,
                     "parent": {
                         "dir": -1,
                         "speed": 295,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": 1,
@@ -1061,6 +1138,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(26, {
         "color": {
             "start": "#146782",
@@ -1068,17 +1147,19 @@
             "opacity": 0.2
         },
         "canvas": {
-            "accuracy": 6
+            "accuracy": 6,
+            "depth": 8,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 184,
-                    "wallDistance": 37,
+                    "wallDistance": 27,
                     "parent": {
                         "dir": 1,
                         "speed": 150,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": -1,
@@ -1089,11 +1170,11 @@
                 },
                 "1": {
                     "deg": 119,
-                    "wallDistance": 40,
+                    "wallDistance": 11,
                     "parent": {
                         "dir": -1,
                         "speed": 210,
-                        "size": 10
+                        "size": 25
                     },
                     "child": {
                         "dir": 1,
@@ -1116,6 +1197,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(27, {
         "color": {
             "start": "#ee6c4d",
@@ -1173,6 +1256,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(28, {
         "color": {
             "start": "#be02f2",
@@ -1230,6 +1315,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(29, {
         "color": {
             "start": "#be02f2",
@@ -1237,17 +1324,19 @@
             "opacity": 0.1
         },
         "canvas": {
-            "accuracy": 2
+            "accuracy": 2,
+            "depth": 2,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 0,
-                    "wallDistance": 30,
+                    "wallDistance": 15,
                     "parent": {
                         "dir": 1,
                         "speed": 0.5,
-                        "size": 18
+                        "size": 30
                     },
                     "child": {
                         "dir": 1,
@@ -1258,11 +1347,11 @@
                 },
                 "1": {
                     "deg": 0,
-                    "wallDistance": 32,
+                    "wallDistance": 15,
                     "parent": {
                         "dir": 1,
                         "speed": 0.5,
-                        "size": 18
+                        "size": 30
                     },
                     "child": {
                         "dir": 1,
@@ -1286,6 +1375,7 @@
         }
     });
 
+    // updated
     addToPresetConfig(30, {
         "color": {
             "start": "#e65405",
@@ -1342,6 +1432,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(31, {
         "color": {
             "start": "#298bbc",
@@ -1357,11 +1449,11 @@
             "gear": {
                 "0": {
                     "deg": 0,
-                    "wallDistance": 20,
+                    "wallDistance": 6,
                     "parent": {
                         "dir": 1,
                         "speed": 3,
-                        "size": 25
+                        "size": 40
                     },
                     "child": {
                         "dir": -1,
@@ -1372,11 +1464,11 @@
                 },
                 "1": {
                     "deg": 0,
-                    "wallDistance": 20,
+                    "wallDistance": 6,
                     "parent": {
                         "dir": 1,
                         "speed": 3,
-                        "size": 25
+                        "size": 40
                     },
                     "child": {
                         "dir": -1,
@@ -1399,6 +1491,8 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(32, {
         "color": {
             "start": "#f58114",
@@ -1456,44 +1550,48 @@
             }
         }
     });
+
+    // updated
     addToPresetConfig(33, {
         "color": {
             "start": "#94bf1d",
             "end": "#d81399",
-            "opacity": 0.8
+            "opacity": 1
         },
         "canvas": {
-            "accuracy": 1
+            "accuracy": 1,
+            "depth": 6,
+            "depthDir": 1
         },
         "machine": {
             "gear": {
                 "0": {
                     "deg": 0,
-                    "wallDistance": 34,
+                    "wallDistance": 15,
                     "parent": {
                         "dir": 1,
-                        "speed": 30,
-                        "size": 14
+                        "speed": 60,
+                        "size": 30
                     },
                     "child": {
                         "dir": 1,
-                        "speed": 1,
-                        "size": 35,
+                        "speed": 1.5,
+                        "size": 32,
                         "conDeg": 0
                     }
                 },
                 "1": {
                     "deg": 0,
-                    "wallDistance": 40,
+                    "wallDistance": 15,
                     "parent": {
                         "dir": 1,
-                        "speed": 30,
-                        "size": 14
+                        "speed": 60,
+                        "size": 30
                     },
                     "child": {
                         "dir": 1,
-                        "speed": 1,
-                        "size": 35,
+                        "speed": 1.5,
+                        "size": 32,
                         "conDeg": 0
                     }
                 }
@@ -1506,11 +1604,13 @@
                     "length": 10
                 },
                 "palm": {
-                    "length": 100
+                    "length": 112
                 }
             }
         }
     });
+
+    //updated
     addToPresetConfig(34, {
         "color": {
             "start": "#1ea6c8",
@@ -1526,11 +1626,11 @@
             "gear": {
                 "0": {
                     "deg": 0,
-                    "wallDistance": 10,
+                    "wallDistance": 6,
                     "parent": {
                         "dir": 1,
                         "speed": 3,
-                        "size": 30
+                        "size": 40
                     },
                     "child": {
                         "dir": -1,
@@ -1541,11 +1641,11 @@
                 },
                 "1": {
                     "deg": 0,
-                    "wallDistance": 10,
+                    "wallDistance": 6,
                     "parent": {
                         "dir": 1,
                         "speed": 3,
-                        "size": 30
+                        "size": 40
                     },
                     "child": {
                         "dir": -1,
@@ -1568,5 +1668,126 @@
             }
         }
     });
+
+    /*
+    8 new:
+        {
+            "color": {
+                "start": "#14b38e",
+                "end": "#1058a1",
+                "opacity": 0.4
+            },
+            "canvas": {
+                "accuracy": 2,
+                "depth": 1,
+                "depthDir": 2
+            },
+            "machine": {
+                "gear": {
+                    "0": {
+                        "deg": 360,
+                        "wallDistance": 25,
+                        "parent": {
+                            "dir": 1,
+                            "speed": 36,
+                            "size": 13.5
+                        },
+                        "child": {
+                            "dir": 1,
+                            "speed": 0.3,
+                            "size": 42.5,
+                            "conDeg": 0
+                        }
+                    },
+                    "1": {
+                        "deg": 99,
+                        "wallDistance": 29,
+                        "parent": {
+                            "dir": -1,
+                            "speed": 300,
+                            "size": 14
+                        },
+                        "child": {
+                            "dir": -1,
+                            "speed": 0.3,
+                            "size": 20,
+                            "conDeg": 0
+                        }
+                    }
+                },
+                "hand": {
+                    "arm": {
+                        "length": 5
+                    },
+                    "forearm": {
+                        "length": 10
+                    },
+                    "palm": {
+                        "length": 100
+                    }
+                }
+            }
+        }
+
+
+        16 new
+        {
+            "color": {
+                "start": "#000000",
+                "end": "#000000",
+                "opacity": 0.5
+            },
+            "canvas": {
+                "accuracy": 1,
+                "depth": 8,
+                "depthDir": 1
+            },
+            "machine": {
+                "gear": {
+                    "0": {
+                        "deg": 0,
+                        "wallDistance": 20,
+                        "parent": {
+                            "dir": -1,
+                            "speed": 146,
+                            "size": 26
+                        },
+                        "child": {
+                            "dir": 1,
+                            "speed": 3,
+                            "size": 50,
+                            "conDeg": 0
+                        }
+                    },
+                    "1": {
+                        "deg": 90,
+                        "wallDistance": 20,
+                        "parent": {
+                            "dir": 1,
+                            "speed": 146,
+                            "size": 26
+                        },
+                        "child": {
+                            "dir": 1,
+                            "speed": 3,
+                            "size": 50,
+                            "conDeg": 0
+                        }
+                    }
+                },
+                "hand": {
+                    "arm": {
+                        "length": 5
+                    },
+                    "forearm": {
+                        "length": 50
+                    },
+                    "palm": {
+                        "length": 130
+                    }
+                }
+            }
+        }
+    */
 
 </script>

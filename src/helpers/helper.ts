@@ -37,6 +37,17 @@ const filters = {
             output = 0
         }
         return output
+    },
+    removeColorHash: (value: string) => {
+        return (value.charAt(0) == '#') ? value.substring(1, 7) : value;
+    },
+    convertToRGB: function(hex: string){
+        let _hex = this.removeColorHash(hex);
+        var color = [];
+        color[0] = this.parseInt ((_hex).substring (0, 2), 16);
+        color[1] = this.parseInt ((_hex).substring (2, 4), 16);
+        color[2] = this.parseInt ((_hex).substring (4, 6), 16);
+        return color;
     }
 }
 
