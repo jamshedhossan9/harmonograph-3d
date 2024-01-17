@@ -570,6 +570,7 @@ var frequency: number = 50,
 
 const setScene = () => {
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvasRef.value, alpha: true });
+    // renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setClearColor( 0xffffff, 1 );
     renderer.setSize( canvas.value.size.width, canvas.value.size.height );
     renderer.shadowMap.enabled = true;
@@ -684,7 +685,8 @@ const setScene = () => {
     threedPosHolder.firstDraw = true;
 
     // window.line = line
-    // window.cameraControls = cameraControls
+    window.camera = camera
+    window.cameraControls = cameraControls
 
     
 }
@@ -699,9 +701,18 @@ const backgroundGradient = ref<BackgroundGradient>({
     color2: backgroundGradientDefault.color2,
 });
 
-const generateBackground = () => {
-    let color1: any = helper.convertToRGB(backgroundGradient.value.color1);
-    let color2: any = helper.convertToRGB(backgroundGradient.value.color2);
+const generateBackground = (colors?: BackgroundGradient) => {
+    let color1: any;
+    let color2: any;
+    if(typeof colors !== "undefined"){
+        color1 = helper.convertToRGB(colors.color1);
+        color2 = helper.convertToRGB(colors.color2);
+    }
+    else{
+        color1 = helper.convertToRGB(backgroundGradient.value.color1);
+        color2 = helper.convertToRGB(backgroundGradient.value.color2);
+    }
+    
     console.log(backgroundGradient.value, color1, color2, backgroundMesh)
     if(typeof backgroundMesh === "undefined"){
         let g = new THREE.PlaneGeometry(2, 2);
@@ -1155,6 +1166,9 @@ var gifDefault: any = {
     currentSetp: 0,
     currentDeg: 0,
     generatedBuffer: null,
+    zoomEnded: 1,
+    isMachineVisible: false,
+    needResize: false,
 }
 var gif = {...gifDefault};
 
@@ -1212,13 +1226,19 @@ const exportGif = () => {
     canvasimgRef.value.download = 'pintograph.gif';
     canvasimgRef.value.click();
     controlingManually.value = false;
-    scene.add(backgroundMesh);
+    // scene.add(backgroundMesh);
+    if(gif.needResize){
+        resizeRenderer();
+    }
+    generateBackground();
+    isMachineVisible.value = gif.isMachineVisible;
 }
 
-const reduceRatio = (width: number, height: number) => {
-    let max = 1000;
+const reduceRatio = (width: number, height: number, max: number = 1500) => {
+    // let max = 1500;
     let _width: number = width;
     let _height: number = height;
+    let needResize: boolean = false;
     if(width > max || height > max){
         if(width > height){
             _width = max;
@@ -1228,28 +1248,85 @@ const reduceRatio = (width: number, height: number) => {
             _height = max;
             _width = (max / height) * width;
         }
+        needResize = true;
     }
     return {
         width: _width,
-        height: _height
+        height: _height,
+        needResize: needResize
     }
 }
 
-const saveGif = () => {
-    scene.remove(backgroundMesh);
-    gif = {...gifDefault};
-    gif.canvas = document.createElement( 'canvas' );
-    let gifRatio = reduceRatio(canvas.value.size.width, canvas.value.size.height);
-    gif.canvas.width = gifRatio.width;
-    gif.canvas.height = gifRatio.height;
-    gif.context = gif.canvas.getContext( '2d', { willReadFrequently: true } );
-    console.log(gif.canvas.width * gif.canvas.height * gif.frames * 5)
-    gif.buffer = new Uint8Array( gif.canvas.width * gif.canvas.height * gif.frames * 5 );
-    gif.pixels = new Uint8Array( gif.canvas.width * gif.canvas.height );
-    gif.writer = new GifWriter( gif.buffer, gif.canvas.width, gif.canvas.height, { loop: 0 } );
+window.reduceRatio = reduceRatio;
+
+const resizeRenderer = (dimension?:{
+    width: number,
+    height: number
+}) => {
     
-    gif.current = 0;
-    triggerAutoRotateForGif();
+    let width: number, height: number, zoom: number;
+    if(typeof dimension !== "undefined"){
+        width = dimension.width;
+        height = dimension.height;
+        gif.zoomEnded = camera.zoom;
+        zoom = (camera.zoom/board.value.size.width) * width;
+    }
+    else{
+        width = board.value.size.width;
+        height = board.value.size.height;
+        zoom = gif.zoomEnded;
+    }
+
+    camera.left = width / - 2;
+    camera.right = width / 2;
+    camera.top = height / 2;
+    camera.bottom = height / - 2;
+
+    camera.updateProjectionMatrix();
+    cameraControls.zoomTo(zoom)
+    // cameraControls.setViewport(0, 0, width / 2, height/ 2)
+
+    renderer.setSize( width, height );
+}
+
+window.resizeRenderer = resizeRenderer;
+
+const saveGif = () => {
+    // scene.remove(backgroundMesh);
+    try{
+        generateBackground({
+            color1: backgroundGradient.value.color1,
+            color2: backgroundGradient.value.color1,
+        });
+        gif = {...gifDefault};
+        gif.canvas = document.createElement( 'canvas' );
+        // document.body.appendChild(gif.canvas)
+        let gifRatio = reduceRatio(canvas.value.size.width, canvas.value.size.height);
+        console.log(gifRatio);
+        gif.needResize = gifRatio.needResize;
+        if(gif.needResize){
+            resizeRenderer(gifRatio)
+        }
+        
+        gif.canvas.width = gifRatio.width;
+        gif.canvas.height = gifRatio.height;
+
+        gif.context = gif.canvas.getContext( '2d', { willReadFrequently: true } );
+        // gif.context.imageSmoothingEnabled = false;
+        console.log(gif.canvas.width * gif.canvas.height * gif.frames * 5)
+        gif.buffer = new Uint8Array( gif.canvas.width * gif.canvas.height * gif.frames * 5 );
+        gif.pixels = new Uint8Array( gif.canvas.width * gif.canvas.height );
+        gif.writer = new GifWriter( gif.buffer, gif.canvas.width, gif.canvas.height, { loop: 0 } );
+        
+        gif.current = 0;
+        gif.isMachineVisible = isMachineVisible.value;
+        isMachineVisible.value = false;
+        triggerAutoRotateForGif();
+    }
+    catch(e: any){
+        console.log(e.message)
+        alert(e.message)
+    }
 }
 
 
@@ -1259,7 +1336,7 @@ const generateGIF = () => {
     // gif.context.fillStyle = 'white';
     // gif.context.fillRect (0, 0, gif.canvas.width, gif.canvas.height);
     renderer.render( scene, camera );
-    gif.context.drawImage(renderer.domElement , 0, 0, canvas.value.size.width, canvas.value.size.height, 0, 0, gif.canvas.width, gif.canvas.height );
+    gif.context.drawImage(renderer.domElement , 0, 0, gif.canvas.width, gif.canvas.height, 0, 0, gif.canvas.width, gif.canvas.height );
     const data = gif.context.getImageData( 0, 0, gif.canvas.width, gif.canvas.height ).data;
     const palette: any[] = [];
 

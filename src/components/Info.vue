@@ -5,8 +5,8 @@
             Harmonographs are simple but interesting devices that display some of the complex, mysterious, and beautiful patterns hidden in simple harmonic motion, such as pendulums and spinning wheels. This is a form of harmonograph that operates on the rotation of two wheels. 
             This model is inspired by <a href="https://www.youtube.com/watch?v=2DjvtjgRdGA" target="_blank">Alfred Hoehn</a>.
         </p>
-        <p class="font-medium text-lg mt-4 mb-0">Usage: </p>
-        <ul class="pl-3 mb-0 mt-2">
+        <p class="font-medium text-lg mt-4 mb-0 line-height-3">Usage: </p>
+        <ul class="pl-3 mb-0 mt-2 line-height-3">
             <li>
                 There is a Setting button at the bottom right corner. 
             </li>
@@ -34,10 +34,10 @@
                 You can Export in JPEG, PNG and GIF format. You will see the Export options in Setting panel.
             </li>
             <li>
-                GIF export will have White background always to maintain quality of drawing, so if you want to export GIF, you have to keep dark drawing color.
+                GIF export won't have a Gradient background to keep a good quality. There are 2 colors for the background gradient, GIF export will have first color as it's background.
             </li>
             <li>
-                Adjust the position and size before exporting GIF.
+                Adjust the position and size before any export.
             </li>
             <li>
                 Settings adjusted by you will be cached in your browser for your future usage.

@@ -4,7 +4,7 @@
         <div class="grid justify-content-center preset_drawings_container">
             <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" v-for="item in presetImageUrls">
                 <div class="preset_element" @click="onSelect(item.no)" :data-id="item.no">
-                    <h3>{{ item.no }}</h3>
+                    <!-- <h3>{{ item.no }}</h3> -->
                     <img class="w-full" :src="item.url" alt="">
                 </div>
             </div>
@@ -37,7 +37,7 @@
         11, 12, 
         21, 22, 23, 24, 25, 26, 13, 14, 16, 17,
     ];
-    const jpegImages = [ 16, 17 ];
+    const jpegImages = [ 13, 14, 16, 17 ];
     const presetImageUrls = ref<any>([]);
 
     for(let item of presetOrder){
@@ -484,9 +484,13 @@
     // updated
     addToPresetConfig(13, {
         "color": {
-            "start": "#000000",
-            "end": "#000000",
+            "start": "#ffffff",
+            "end": "#ffffff",
             "opacity": 0.5
+        },
+        "background": {
+            "color1": "#776a95",
+            "color2": "#0e1443"
         },
         "canvas": {
             "accuracy": 1,
@@ -539,7 +543,69 @@
             }
         }
     });
-    addToPresetConfig(14, presetConfig.value[13]);
+
+    // updated
+    addToPresetConfig(14, {
+        "color": {
+            "start": "#ffffff",
+            "end": "#ffffff",
+            "opacity": 0.5
+        },
+        "background": {
+            "color1": "#6e9687",
+            "color2": "#05331f"
+        },
+        "canvas": {
+            "accuracy": 1,
+            "depth": 4,
+            "depthDir": 1
+        },
+        "machine": {
+            "gear": {
+                "0": {
+                    "deg": 325,
+                    "wallDistance": 5,
+                    "parent": {
+                        "dir": 1,
+                        "speed": 177,
+                        "size": 25
+                    },
+                    "child": {
+                        "dir": 1,
+                        "speed": 1,
+                        "size": 61,
+                        "conDeg": 0
+                    }
+                },
+                "1": {
+                    "deg": 199,
+                    "wallDistance": 5,
+                    "parent": {
+                        "dir": -1,
+                        "speed": 1,
+                        "size": 25
+                    },
+                    "child": {
+                        "dir": -1,
+                        "speed": 3,
+                        "size": 43,
+                        "conDeg": 0
+                    }
+                }
+            },
+            "hand": {
+                "arm": {
+                    "length": 5
+                },
+                "forearm": {
+                    "length": 10
+                },
+                "palm": {
+                    "length": 100
+                }
+            }
+        }
+    });
 
     // updated
     addToPresetConfig(15, {
@@ -709,6 +775,64 @@
                         "speed": 3,
                         "size": 60,
                         "conDeg": 70
+                    }
+                }
+            },
+            "hand": {
+                "arm": {
+                    "length": 5
+                },
+                "forearm": {
+                    "length": 10
+                },
+                "palm": {
+                    "length": 100
+                }
+            }
+        }
+    })
+
+    addToPresetConfig(18, {
+        "color": {
+            "start": "#f9539b",
+            "end": "#f9539b",
+            "opacity": 0.1
+        },
+        "canvas": {
+            "accuracy": 4,
+            "depth": 1,
+            "depthDir": 1
+        },
+        "machine": {
+            "gear": {
+                "0": {
+                    "deg": 168,
+                    "wallDistance": 10,
+                    "parent": {
+                        "dir": 1,
+                        "speed": 100,
+                        "size": 25
+                    },
+                    "child": {
+                        "dir": -1,
+                        "speed": 0.2,
+                        "size": 50,
+                        "conDeg": 0
+                    }
+                },
+                "1": {
+                    "deg": 118,
+                    "wallDistance": 9,
+                    "parent": {
+                        "dir": -1,
+                        "speed": 160,
+                        "size": 25
+                    },
+                    "child": {
+                        "dir": -1,
+                        "speed": 0.2,
+                        "size": 50,
+                        "conDeg": 52
                     }
                 }
             },
@@ -1262,7 +1386,7 @@
         "color": {
             "start": "#be02f2",
             "end": "#f28202",
-            "opacity": 0.3
+            "opacity": 0.1
         },
         "canvas": {
             "accuracy": 1,
