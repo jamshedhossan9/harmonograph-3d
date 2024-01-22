@@ -72,6 +72,9 @@
     </Sidebar>
     <a id="canvasimg" ref="canvasimgRef" style="position:absolute;top:10%;left:52%;display:none;" download>Download</a>
     <a ref="stlExportRef" style="position:absolute;top:10%;left:52%;display:none;" download>Download</a>
+    <div>
+        <HourRangePicker></HourRangePicker>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -97,6 +100,11 @@ import SplitButton from 'primevue/splitbutton';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
 import { useScroll } from '@vueuse/core'
+import { HourRangePicker, type HourRangePickerType } from 'vue-hour-range-picker'
+// import type { HourRangePickerType } from 'vue-hour-range-picker'
+import 'vue-hour-range-picker/style.css'
+
+const HourRangePickerValue = ref<HourRangePickerType>()
 
 const isMounted = ref(false);
 const sidebarShow = ref(true);

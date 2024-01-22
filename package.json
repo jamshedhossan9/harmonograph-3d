@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite --host --port=8080",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -22,6 +22,7 @@
     "sass": "^1.69.5",
     "three": "^0.159.0",
     "vue": "^3.3.11",
+    "vue-hour-range-picker": "^1.0.0",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
