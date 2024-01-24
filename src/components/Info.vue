@@ -8,7 +8,11 @@
                         <span class="p-dialog-title" data-pc-section="title">Harmonograph 3D</span>
                         <span>
                             - 
-                            <a href="" target="_blank">Github</a>
+                            <a href="https://github.com/jamshedhossan9/harmonograph-3d/" target="_blank">Github</a>
+                        </span>
+                        <span>
+                            - 
+                            <a target="_blank" href="https://github.com/jamshedhossan9/harmonograph-3d/discussions/1">Discussion</a>
                         </span>
                     </div>
                 </div>

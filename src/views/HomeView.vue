@@ -64,6 +64,7 @@
         </div>
         
     </Sidebar>
+    <Thanks ref="thanksRef"></Thanks>
     <a id="canvasimg" ref="canvasimgRef" style="position:absolute;top:10%;left:52%;display:none;" download>Download</a>
     <a ref="stlExportRef" style="position:absolute;top:10%;left:52%;display:none;" download>Download</a>
 </template>
@@ -87,6 +88,7 @@ import { GifWriter } from 'omggif';
 import SplitButton from 'primevue/splitbutton';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
+import Thanks from '@/components/Thanks.vue';
 import { useScroll } from '@vueuse/core'
 
 const isMounted = ref(false);
@@ -101,6 +103,7 @@ const { y: settingScrollerY } = useScroll(settingScroller, { onScroll: () => {
     settingScrollerCurrentX.value = settingScrollerY.value;
 } })
 
+const thanksRef = ref();
 const boardRef = ref();
 const board = ref<BoardType>({
     size:{
@@ -215,7 +218,7 @@ const gear = {
 };
 
 const settingToCache = () => {
-    console.log(gear)
+    // console.log(gear)
     var setting = {
         color:{
             start: color.value.start,
@@ -291,7 +294,7 @@ const cacheToSetting = (setting?: any, isPreset: boolean = false) => {
         }
     }
     if(setting){
-        console.log(setting)
+        // console.log(setting)
         if(typeof setting?.machine?.gear?.[0]?.deg !== "undefined"){
             gear[0].value.deg = setting.machine.gear[0].deg;
         }
@@ -646,7 +649,7 @@ const generateBackground = (colors?: BackgroundGradient) => {
         color2 = helper.convertToRGB(backgroundGradient.value.color2);
     }
     
-    console.log(backgroundGradient.value, color1, color2, backgroundMesh)
+    // console.log(backgroundGradient.value, color1, color2, backgroundMesh)
     if(typeof backgroundMesh === "undefined"){
         let g = new THREE.PlaneGeometry(2, 2);
         let m = new THREE.ShaderMaterial({
@@ -669,7 +672,7 @@ const generateBackground = (colors?: BackgroundGradient) => {
                     gl_FragColor = vec4( mix( color1, color2, length(uv)), 1. );
                 }`
         });
-        console.log(m)
+        // console.log(m)
         backgroundMesh = new THREE.Mesh(g, m);
         backgroundMesh.frustumCulled = false;
     }
@@ -736,7 +739,7 @@ const checkCurrentPosition = () => {
 const drawThree = () => {
     
     if(currentPossition >= MAX_POINTS){
-        console.log('Max points reached', MAX_POINTS)
+        // console.log('Max points reached', MAX_POINTS)
         stop();
     }
     let x = threedPosHolder.new.x;
@@ -950,24 +953,24 @@ const save = () => {
     scene.remove(backgroundMesh);
     renderer.render( scene, camera );
     var dataURL = renderer.domElement.toDataURL('image/png');
-    console.log(canvasimgRef.value, dataURL)
+    // console.log(canvasimgRef.value, dataURL)
     canvasimgRef.value.href = dataURL;
     canvasimgRef.value.download = 'pintograph.png';
     canvasimgRef.value.click();
     renderer.setClearColor( 0xffffff, 1 );
     scene.add(backgroundMesh);
-
+    thanksRef.value.openPopup();
 }
 const saveJpeg = () => {
     renderer.setClearColor( 0xffffff, 1 );
     renderer.render( scene, camera );
     var dataURL = renderer.domElement.toDataURL('image/jpeg');
-    console.log(canvasimgRef.value, dataURL)
+    // console.log(canvasimgRef.value, dataURL)
     canvasimgRef.value.href = dataURL;
     canvasimgRef.value.download = 'pintograph.jpeg';
     canvasimgRef.value.click();
     renderer.setClearColor( 0xffffff, 1 );
-
+    thanksRef.value.openPopup();
 }
 
 const generatingGif = ref(false);
@@ -1034,6 +1037,7 @@ const exportGif = () => {
     }
     generateBackground();
     isMachineVisible.value = gif.isMachineVisible;
+    thanksRef.value.openPopup();
 }
 
 const reduceRatio = (width: number, height: number, max: number = 1500) => {
@@ -1104,7 +1108,7 @@ const saveGif = () => {
         gif.canvas = document.createElement( 'canvas' );
         // document.body.appendChild(gif.canvas)
         let gifRatio = reduceRatio(canvas.value.size.width, canvas.value.size.height);
-        console.log(gifRatio);
+        // console.log(gifRatio);
         gif.needResize = gifRatio.needResize;
         if(gif.needResize){
             resizeRenderer(gifRatio)
@@ -1115,7 +1119,7 @@ const saveGif = () => {
 
         gif.context = gif.canvas.getContext( '2d', { willReadFrequently: true } );
         // gif.context.imageSmoothingEnabled = false;
-        console.log(gif.canvas.width * gif.canvas.height * gif.frames * 5)
+        // console.log(gif.canvas.width * gif.canvas.height * gif.frames * 5)
         gif.buffer = new Uint8Array( gif.canvas.width * gif.canvas.height * gif.frames * 5 );
         gif.pixels = new Uint8Array( gif.canvas.width * gif.canvas.height );
         gif.writer = new GifWriter( gif.buffer, gif.canvas.width, gif.canvas.height, { loop: 0 } );
@@ -1126,7 +1130,7 @@ const saveGif = () => {
         triggerAutoRotateForGif();
     }
     catch(e: any){
-        console.log(e.message)
+        // console.log(e.message)
         alert(e.message)
     }
 }
@@ -1269,7 +1273,7 @@ const start = () => {
     // console.log('start');
     const _start = () => {
         if(!drawing.value){
-            console.log('threedPosHolder.positionChanged', threedPosHolder.positionChanged, currentPossition)
+            // console.log('threedPosHolder.positionChanged', threedPosHolder.positionChanged, currentPossition)
             drawing.value = true;
             
             machineRef.value.setMachineAndGear();
@@ -1308,7 +1312,7 @@ const start = () => {
             }
         }
         catch(e){
-            console.log(e)
+            // console.log(e)
         }
     }
     

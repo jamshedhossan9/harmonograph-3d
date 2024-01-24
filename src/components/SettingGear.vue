@@ -251,7 +251,7 @@
     const tempDir = 1
 
     onMounted(() => {
-        console.log('SettingGear mounted')
+        // console.log('SettingGear mounted')
         if(props.modelValue){
             currentValue.value = props.modelValue;
         }

@@ -24,6 +24,7 @@ export default defineConfig({
     server: {
         hmr: false,
     },
+    base: '/harmonograph-3d/',
     build:{
         rollupOptions: {
             output: {

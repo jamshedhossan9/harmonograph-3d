@@ -5,7 +5,7 @@
             <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" v-for="item in presetImageUrls">
                 <div class="preset_element" @click="onSelect(item.no)" :data-id="item.no">
                     <!-- <h3>{{ item.no }}</h3> -->
-                    <img class="w-full" :src="item.url" alt="">
+                    <img class="w-full" :src="item.url" :alt="`Harmonograph-${item.no}, Pintograph-${item.no}`">
                 </div>
             </div>
         </div>

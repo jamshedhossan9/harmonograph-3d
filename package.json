@@ -1,18 +1,18 @@
 {
-    "name": "harmonograph3d",
+    "name": "harmonograph-3d",
     "author": "Jamshed Hossan",
     "version": "0.0.0",
     "private": true,
     "description": "A tool to draw harmonographs in 3D",
-    "homepage": "",
+    "homepage": "https://jamshedhossan9.github.io/harmonograph-3d/",
     "type": "module",
     "bugs": {
-        "url": "",
+        "url": "https://github.com/jamshedhossan9/harmonograph-3d/issues/new",
         "email": "jamshedhossan9@gmail.com"
     },
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "git+https://github.com/jamshedhossan9/harmonograph-3d.git"
     },
     "scripts": {
         "dev": "vite --host",
