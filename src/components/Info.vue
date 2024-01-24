@@ -5,8 +5,8 @@
             <div class="p-dialog-header">
                 <div class="flex-grow-1">
                     <div class="flex align-items-center flex-wrap gap-2">
-                        <span class="p-dialog-title" data-pc-section="title">Harmonograph 3D</span>
-                        <div class="flex gap-2">
+                        <span class="text-lg font-semibold" data-pc-section="title">Harmonograph 3D</span>
+                        <div class="flex gap-2 text-sm">
                             <span>
                                 - 
                                 <a href="https://github.com/jamshedhossan9/harmonograph-3d/" target="_blank">Github</a>
@@ -69,8 +69,8 @@
                     
                 </ul>
             </div>
-            <div class="p-dialog-footer pt-2 text-left">
-                <div class="flex gap-2 flex-wrap"><span>Copyright (C) 2024 - </span><span>Jamshed Hossan</span></div>
+            <div class="p-dialog-footer pt-2 text-left pr-0">
+                <div class="flex gap-2 flex-wrap text-sm md:text-base"><span>Copyright (C) 2024 - </span><span>Jamshed Hossan</span></div>
             </div>
         </template>
     </Dialog>
