@@ -312,7 +312,7 @@
             currentValue.value = props.modelValue;
         }
         
-        updateModel();
+        // updateModel();
     })
 
     watch(() => [props.color.start, props.color.end], () => {

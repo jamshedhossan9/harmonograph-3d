@@ -259,7 +259,7 @@
         currentValue.value.side = gearSide.value;
         side.value = gearSide.value == 'right' ? 'Right' : 'Left';
         alterSide.value = gearSide.value == 'right' ? 'Left' : 'Right';
-        updateModel()
+        // updateModel()
     })
 
 </script>
