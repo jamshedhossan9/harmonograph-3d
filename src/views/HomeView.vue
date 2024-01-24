@@ -11,7 +11,7 @@
     </main>
     <div class="setting">
         <div class="active-tools">
-            <div class="flex gap-2 align-items-center flex-wrap">
+            <div class="flex gap-2 align-items-center flex-wrap justify-content-end">
                 <Button class="p-button-xs" v-if="drawing" size="small" severity="warning" label="Pause" @click="stop()"  :disabled="controlingManually"></Button>
                 <Button class="p-button-xs" v-else size="small" label="Draw" @click="start(); sidebarShow = false;"  :disabled="controlingManually"></Button>
                 <Button class="p-button-xs" v-if="isMachineVisible" size="small" label="Hide Machine" severity="help" @click="machineVisibility" :disabled="controlingManually"></Button>
