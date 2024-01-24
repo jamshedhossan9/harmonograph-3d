@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, watch } from 'vue'
+    import { ref } from 'vue'
     import type { PropType } from 'vue'
-    import type { SettingGearType, BoardType, CanvasType, HandType, ColorType } from '@/types/Setting';
+    import type { SettingGearType } from '@/types/Setting';
 
     const props = defineProps({
         modelValue: {
@@ -40,15 +40,4 @@
         machine_gear_handle,
     })
 
-    onMounted(() => {
-        console.log('Gear mounted')
-    })
-
-    // watch(() => [
-    //     props.modelValue.parent.deg,  
-    //     props.modelValue.child.deg,  
-    // ], () => {
-    //     machine_gear_parent.value.style.transform = `rotate(${ props.modelValue.parent.deg }deg)`;
-    //     machine_gear_child.value.style.transform = `rotate(${ props.modelValue.child.deg }deg)`;
-    // })
 </script>

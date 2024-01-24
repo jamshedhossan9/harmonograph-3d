@@ -15,13 +15,7 @@ html, body{
     opacity: 0;
     visibility: hidden;
 }
-.setting{
-    position: fixed;
-    right:0;
-    bottom:0;
-    padding: .6rem 1.25rem .6rem 1.25rem;
-    max-width: 100%;
-}
+
 .setting-sidebar{
     .p-sidebar-header{
         padding: .6rem 1.25rem;
@@ -155,6 +149,64 @@ html, body{
     width: 100%;
     height:  100%;
     /*border: 1px solid red;*/
+    .intro{
+        position: fixed;
+        font-size: 12px;
+        line-height: 1.4;
+        left: 50%;
+        bottom: 3px;
+        transform: translateX(-50%);
+        text-align: center;
+        
+        color: #555;
+        // text-shadow: 1px 1px 1px rgba(255,255,255,.5);
+        display: flex;
+        flex-direction: row;
+        .name{
+            padding-right: 5px;
+            margin-right: 5px;
+            border-right: 1px solid;
+        }
+        .copywrite{
+            display: flex;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+        @media(min-width: 768px){
+            left: 10px;
+            bottom: 6px;
+            transform: translateX(0%);
+            text-align: left;
+            flex-direction: column;
+            .name{
+                padding-right: 0;
+                margin-right: 0;
+                border-right: none;
+            }
+        }
+        @media(min-width: 1200px){
+            left: 50%;
+            bottom: 3px;
+            transform: translateX(-50%);
+            text-align: center;
+            flex-direction: column;
+            .name{
+                padding-right: 0;
+                margin-right: 0;
+                border-right: none;
+            }
+        }
+    }
+}
+.setting{
+    position: fixed;
+    right:0;
+    bottom:15px;
+    padding: .6rem 1.25rem .6rem 1.25rem;
+    max-width: 100%;
+    @media(min-width: 768px){
+        bottom: 0px;
+    }
 }
 .canvas{
     position:  absolute;
@@ -447,3 +499,4 @@ html, body{
 .p-sidebar-mask.p-component-overlay{
     background: none !important;
 }
+

@@ -92,13 +92,6 @@
             </div>
             <div>
                 <InputGroup class="input-range-group">
-                    <!-- <InputGroupAddon class="gap-2">
-                        Depth
-                        <span 
-                            v-tooltip.left="`Determines how much it draws in Z axis to make a 3D like object.`">
-                            <span class="pi pi-info-circle"></span>
-                        </span>
-                    </InputGroupAddon> -->
                     <div class="flex-none">
                         <Dropdown v-model="depthDir" :options="depthDirOptions" optionLabel="name" optionValue="value" placeholder="Depth direction" class="w-full border-noround-right" @update:modelValue="updateModel(); updatePosition()" />
                     </div>
@@ -184,17 +177,15 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, watch, reactive } from 'vue'
+    import { ref, onMounted, watch } from 'vue'
     import type { PropType } from 'vue'
     import type { HandType, ColorType, BackgroundGradient } from '@/types/Setting';
-    import SelectButton from 'primevue/selectbutton';
     import Slider from 'primevue/slider';
     import InputNumber from 'primevue/inputnumber';
     import InputGroup from 'primevue/inputgroup';
     import InputGroupAddon from 'primevue/inputgroupaddon';
     import Button from 'primevue/button';
     import Dropdown from 'primevue/dropdown';
-    import helper from '@/helpers/helper';
 
     var currentValue = ref<HandType>({
         arm: {
@@ -271,22 +262,17 @@
     const color = ref(props.color);
     const opacity = ref(props.opacity);
     const backgroundGradient = ref(props.backgroundGradient);
-    console.log(backgroundGradient.value)
     
-    
-    const removeColorHash = (value: string) => {
-        return (value.charAt(0) == '#') ? value.substring(1, 7) : value;
-    }
 
     const colorStart = ref((color.value.start));
     const colorEnd = ref((color.value.end));
 
     const updateModel = () => {
-        emit('update:accuracy', accuracy)
-        emit('update:depth', depth)
-        emit('update:depthDir', depthDir)
-        emit('update:opacity', opacity)
-        emit('update:modelValue', currentValue)
+        emit('update:accuracy', accuracy.value)
+        emit('update:depth', depth.value)
+        emit('update:depthDir', depthDir.value)
+        emit('update:opacity', opacity.value)
+        emit('update:modelValue', currentValue.value)
     }
 
     const updateColor = (e: any, no: number) => {
@@ -300,7 +286,7 @@
         }
         color.value.start = `${colorStart.value}`;
         color.value.end = `${colorEnd.value}`;
-        emit('update:color', color);
+        emit('update:color', color.value);
     }
 
     const updatePosition = () => {
@@ -308,24 +294,20 @@
     }
 
     const updateBackground = (e: any, no: number) => {
-        console.log(e.target.value)
         if(no == 1){
             backgroundGradient.value.color1 = e.target.value;
         }
         else if(no == 2){
             backgroundGradient.value.color2 = e.target.value;
         }
-        console.log(backgroundGradient.value)
-        emit('update:backgroundGradient', backgroundGradient)
+        emit('update:backgroundGradient', backgroundGradient.value)
     }
 
     const onColorStartInput = (e: any) => {
-        console.log(e)
         colorEnd.value = e.value;
     }
 
     onMounted(() => {
-        console.log('SettingOther mounted')
         if(props.modelValue){
             currentValue.value = props.modelValue;
         }

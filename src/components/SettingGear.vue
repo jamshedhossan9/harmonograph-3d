@@ -189,7 +189,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, watch, reactive } from 'vue'
+    import { ref, onMounted } from 'vue'
     import type { PropType } from 'vue'
     import type { SettingGearType } from '@/types/Setting';
     import SelectButton from 'primevue/selectbutton';
@@ -241,9 +241,7 @@
     const alterSide = ref<string>('Right');
 
     const updateModel = () => {
-        // console.log(JSON.stringify(e))
-        console.log(JSON.stringify(currentValue.value))
-        emit('update:modelValue', currentValue)
+        emit('update:modelValue', currentValue.value)
     }
 
     const updatePosition = () => {
@@ -261,7 +259,6 @@
         currentValue.value.side = gearSide.value;
         side.value = gearSide.value == 'right' ? 'Right' : 'Left';
         alterSide.value = gearSide.value == 'right' ? 'Left' : 'Right';
-        // console.log(currentValue.value)
         updateModel()
     })
 

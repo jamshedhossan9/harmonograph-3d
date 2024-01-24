@@ -1,5 +1,5 @@
 <template>
-    <Button  class="p-button-xs" label="Presets" severity="info" size="small" @click="visible = true"></Button>
+    <Button  class="p-button-xs- preset-btn-" raised size="small" label="Presets" severity="info"  @click="visible = true"></Button>
     <Dialog v-model:visible="visible" modal header="Presets" class="p-dialog-maximized preset-dialog">
         <div class="grid justify-content-center preset_drawings_container">
             <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" v-for="item in presetImageUrls">
@@ -23,8 +23,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, watch, reactive } from 'vue'
-    import helper from '@/helpers/helper';
+    import { ref } from 'vue'
     import Button from 'primevue/button';
     import Dialog from 'primevue/dialog';
 

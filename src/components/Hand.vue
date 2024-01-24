@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue'
+    import { ref } from 'vue'
 
     const machine_hand_arm_0 = ref();
     const machine_hand_arm_0_display = ref();
@@ -85,7 +85,4 @@
 
     const penIcon = ref(new URL(`../assets/icons/pencil.svg`, import.meta.url));
 
-    onMounted(() => {
-        console.log('Hand mounted')
-    })
 </script>

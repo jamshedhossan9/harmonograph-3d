@@ -9,9 +9,9 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, watch, reactive } from 'vue'
+    import { ref, onMounted } from 'vue'
     import type { PropType } from 'vue'
-    import type { SettingGearType, BoardType, CanvasType, HandType, ColorType } from '@/types/Setting';
+    import type { SettingGearType, BoardType, HandType, ColorType } from '@/types/Setting';
     import Gear from '@/components/Gear.vue';
     import Hand from '@/components/Hand.vue';
     import helper from '@/helpers/helper';
@@ -45,7 +45,6 @@
     const rightRef = ref();
     const handRef = ref();
     const machineGearCon = ref();
-    // const penRef = ref(handRef.value.machine_hand_pen);
 
     const gearsEl = {
         0: leftRef,
@@ -105,53 +104,12 @@
             }
         }
     }
-    const _setGear = (no?: 0 | 1) => {
-        if(props.board){
-            if(typeof no === "undefined"){
-                setGear(0);
-                setGear(1);
-                return;
-            }
-            if(gear.value[no] && gearsEl[no]?.value?.machine_gear){
-                let gearwidth = (props.board.size.width / 100) * gear.value[no].parent.size;
-                gearsEl[no].value.machine_gear.style.width = `${gearwidth}px`;
-                gearsEl[no].value.machine_gear.style.height = `${gearwidth}px`;
-                
-                gearsEl[no].value.machine_gear_child_con.style.width = `${(gearwidth / 100) * gear.value[no].child.size}px`;
-                gearsEl[no].value.machine_gear_child_con.style.height = `${(gearwidth / 100) * gear.value[no].child.size}px`;
-
-                let wallDistance = (props.board.size.width / 100) * gear.value[no].wallDistance;
-                if(no == 0){
-                    let gear1Width = (props.board.size.width / 100) * gear.value[1].parent.size;
-                    let max = props.board.size.width - (((props.board.size.width / 100) * gear.value[1].wallDistance) + gearwidth + gear1Width);
-                    wallDistance = Math.min(wallDistance, max);
-                    if(wallDistance < 0){
-                        wallDistance = 0;
-                    }
-                    gearsEl[no].value.machine_gear.style.left = `${wallDistance}px`;
-                }
-                else if(no == 1){
-                    let gear0Width = (props.board.size.width / 100) * gear.value[0].parent.size;
-                    let max = props.board.size.width - (((props.board.size.width / 100) * gear.value[0].wallDistance) + gearwidth + gear0Width);
-                    wallDistance = Math.min(wallDistance, max);
-                    if(wallDistance < 0){
-                        wallDistance = 0;
-                    }
-                    gearsEl[no].value.machine_gear.style.right = `${wallDistance}px`;
-                }
-
-                gearsEl[no].value.machine_gear.style.transform = `rotate(${gear.value[no].deg}deg)`;
-                gearsEl[no].value.machine_gear_child_con.style.transform = `rotate(${gear.value[no].child.conDeg}deg)`;
-            }
-        }
-    }
 
     const setArmLength = () => {
         let gear0Bound = gearsEl[0].value.machine_gear.getBoundingClientRect();
         let gear1Bound = gearsEl[1].value.machine_gear.getBoundingClientRect();
         let armMinLen = (gear1Bound.right - gear0Bound.left) / 2;
         
-        // console.log((board.size.min / 100) * machine.hand.arm.length, armMinLen)
         hand.value.arm.px = Math.max((props.board.size.min / 100) * hand.value.arm.length, armMinLen);
 
         let forearmMinLen = (hand.value.arm.px / 100) * 20;
@@ -275,7 +233,6 @@
             c[1] = helper.parseInt(c[1]);
             c[2] = helper.parseInt(c[2]);
 
-            // colors.push(`rgba(${c[0]},${c[1]},${c[2]},${opacity})`);
             colors.push([c[0], c[1], c[2]]);
         }
         var reverseColors = [...colors]
@@ -290,10 +247,7 @@
     }
 
     onMounted(() => {
-        console.log('Machine mounted')
-        // setGear()
         isMounted.value = true;
-        
     })
 
     defineExpose({
