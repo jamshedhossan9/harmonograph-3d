@@ -17,6 +17,10 @@
                 <Button class="p-button-xs" v-if="isMachineVisible" size="small" label="Hide Machine" severity="help" @click="machineVisibility" :disabled="controlingManually"></Button>
                 <SplitButton v-else class="p-splitbutton-xs" severity="info" label="Show Machine" @click="machineVisibility" :model="machineVisibilityOptions" :disabled="controlingManually" />
                 <SplitButton v-if="isDrawn && cameraControlsDirty && (!isMachineVisible || (isMachineVisible && !drawing))" class="p-splitbutton-xs" severity="secondary" label="Reset Position" @click="resetPosition" :model="resetPositionOptions" />
+                
+                <a href="https://github.com/jamshedhossan9/harmonograph-3d" target="_blank">
+                    <Button class="p-button-xs" icon="pi pi-github" size="small" rounded severity="secondary"  v-tooltip.top="'Github'"></Button>
+                </a>
                 <Info></Info>
                 <Button class="p-button-xs" :icon="sidebarShow ? 'pi pi-angle-right' : 'pi pi-wrench'"  size="small" rounded severity="secondary" @click="stop(); sidebarShow = true" v-tooltip.left="'Settings'"></Button>
             </div>
