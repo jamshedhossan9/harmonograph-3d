@@ -53,7 +53,7 @@
                     </AccordionTab>
                 </Accordion>
             </div>
-            <div class="flex-none mt-auto pt-2 flex gap-1 justify-content-between align-items-center flex-wrap">
+            <div class="flex-none mt-auto pt-2 flex gap-1 justify-content-between align-items-center flex-wrap sidebar-bottom-toolbar">
                 <Button class="p-button-xs" v-if="drawing" size="small" severity="warning" label="Pause" @click="stop()"></Button>
                 <Button class="p-button-xs" v-else size="small" label="Draw" @click="start(); sidebarShow = false;"></Button>
                 <SplitButton v-if="isDrawn" class="p-splitbutton-xs" severity="success" label="Export" ref="exportBtnRef" @click="openExportOptions" :model="exportOptions" />

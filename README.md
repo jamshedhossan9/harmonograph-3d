@@ -5,7 +5,7 @@ A tool to draw geometric images like Harmonograph but in 3D. A 3d version of my 
 
 This project simulates a harmonograph, one of the various types available. Some call it Pintograph. To generate drawings, users can specify their own settings. Users can see a few preset samples that are being emulated. Prior to drawing, they have the ability to alter the inputs of preset designs. The browser will cache the last configuration that was used.
 
-The Project is written in **Vu3** and **Typescript**.
+The Project is written in **Vue3** and **Typescript**.
 
 Larger screens provide the greatest experience.
 

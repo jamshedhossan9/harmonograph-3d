@@ -11,7 +11,7 @@
         </div>
         <template #footer>
             <div class="flex w-full align-items-center">
-                <div class="flex-grow-1 text-primary text-left">
+                <div class="flex-grow-1 text-primary text-left text-xs md:text-sm">
                     Click "Draw" after selecting a Preset drawing. You can make any necessary changes to the inputs before using "Draw".
                 </div>
                 <div class="flex-none">

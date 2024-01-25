@@ -35,7 +35,7 @@ html, body{
         display: flex;
         .p-button{
             flex-grow: 1;
-            padding: .5rem 1rem;
+            padding: .5rem .3rem;
             .p-button-label{
                 font-size: 90%;
             }
@@ -500,4 +500,110 @@ html, body{
 .p-sidebar-mask.p-component-overlay{
     background: none !important;
 }
+.setting-sidebar{
+    @media(max-width: 460px){
+        .direction-group{
+            .p-inputgroup-addon{
+                font-size: .7rem;
+                padding: .35rem .5rem .35rem .5rem;
+            }
+            .p-selectbutton{
+                .p-button{
+                    .p-button-label{
+                        font-size: .7rem;
+                    }
+                }
+            }
+        }
+        .input-range-group{
+            .p-inputgroup-addon{
+                font-size: .7rem;
+                padding: .35rem .5rem .35rem .5rem;
+            }
+            .p-inputnumber{
+                .p-inputtext{
+                    font-size: .7rem;
+                    // padding: .15rem 1rem;
+                }
+                .p-inputnumber-button-group{
+                    .p-button{
+                        svg{
+                            width: 13px;
+                            height: 13px;
+                        }
+                    }
+                }
+        
+            }
+            .p-dropdown{
+                .p-dropdown-label{
+                    font-size: .7rem;
+                    padding: .45rem 0 .45rem .5rem;
+                }
+                .p-dropdown-trigger{
+                    width: 1.5rem;
+                    svg{
+                        width: 12px;
+                        height: 12px;
+                    }
+                }
+            }
+            .range-container{
+                height:0;
+                margin-top:-4px;
+            }
+        }
+        .input-color-group{
+            .p-inputgroup-addon{
+                font-size: .7rem;
+                padding: .35rem .5rem .35rem .5rem;
+            }
+        }
+    }
+    @media(max-width:320px){
+        .direction-group{
+            .p-selectbutton{
+                
+                .p-button:first-child{
+                    justify-content: center;
+                    .p-button-label{
+                        width: 22px;
+                        overflow: hidden;
+                        flex: none;
+                    }
+                }
+                .p-button:last-child{
+                    justify-content: center;
+                    .p-button-label{
+                        width: 20px;
+                        overflow: hidden;
+                        flex: none;
+                    }
+                }
+            }
+        }
+    }
 
+    .sidebar-bottom-toolbar{
+        @media(max-width:460px){
+            gap: 2px !important;
+            .p-button{
+                font-size: 0.675rem !important;
+                width: auto !important;
+                padding: 6px 8px !important;
+                &.p-splitbutton-menubutton{
+                    svg{
+                        width: 13px;
+                        height: 13px;
+                    }
+                }
+            }
+        }
+        @media(max-width:320px){
+            .p-button{
+                padding: 6px !important;
+            }
+        }
+        
+    }
+}
